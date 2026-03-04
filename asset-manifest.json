@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/www.johndyates.com/static/js/main.3802769f.js",
-    "index.html": "/www.johndyates.com/index.html",
-    "main.3802769f.js.map": "/www.johndyates.com/static/js/main.3802769f.js.map"
+    "main.js": "/static/js/main.3802769f.js",
+    "index.html": "/index.html",
+    "main.3802769f.js.map": "/static/js/main.3802769f.js.map"
   },
   "entrypoints": [
     "static/js/main.3802769f.js"
