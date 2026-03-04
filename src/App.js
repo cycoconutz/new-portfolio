@@ -23,30 +23,29 @@ const styles = `
     background: var(--bg);
     color: var(--text);
     overflow-x: hidden;
-    cursor: none;
   }
 
-  /* Custom cursor */
-  .cursor {
-    width: 8px; height: 8px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.1s;
-    mix-blend-mode: difference;
-  }
-  .cursor-ring {
-    width: 32px; height: 32px;
-    border: 1px solid var(--accent);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.15s ease;
-    opacity: 0.5;
-  }
+  // /* Custom cursor */
+  // .cursor {
+  //   width: 8px; height: 8px;
+  //   background: var(--accent);
+  //   border-radius: 50%;
+  //   position: fixed;
+  //   pointer-events: none;
+  //   z-index: 9999;
+  //   transition: transform 0.1s;
+  //   mix-blend-mode: difference;
+  // }
+  // .cursor-ring {
+  //   width: 32px; height: 32px;
+  //   border: 1px solid var(--accent);
+  //   border-radius: 50%;
+  //   position: fixed;
+  //   pointer-events: none;
+  //   z-index: 9998;
+  //   transition: all 0.15s ease;
+  //   opacity: 0.5;
+  // }
 
   /* Noise overlay */
   .noise {
