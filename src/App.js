@@ -571,7 +571,7 @@ const styles = `
   }
 `;
 
-const projects = const projects = [
+const projects = [
   {
     id: "01",
     tag: "Featured",
@@ -615,7 +615,8 @@ const projects = const projects = [
     tech: ["React", "CSS3", "GitHub Pages"],
     link: "https://www.johndyates.com/",
   },
-];;
+];
+
 
 const skills = [
   "JavaScript (ES6+)", "React.js", "Node.js", "Express.js",
