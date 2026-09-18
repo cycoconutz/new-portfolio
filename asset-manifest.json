@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/static/js/main.3a1d18be.js",
-    "index.html": "/index.html",
-    "main.3a1d18be.js.map": "/static/js/main.3a1d18be.js.map"
+    "main.js": "/www.johndyates.com/static/js/main.26f922c3.js",
+    "index.html": "/www.johndyates.com/index.html",
+    "main.26f922c3.js.map": "/www.johndyates.com/static/js/main.26f922c3.js.map"
   },
   "entrypoints": [
-    "static/js/main.3a1d18be.js"
+    "static/js/main.26f922c3.js"
   ]
 }
