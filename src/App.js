@@ -571,50 +571,51 @@ const styles = `
   }
 `;
 
-const projects = [
+const projects = const projects = [
   {
     id: "01",
-    tag: "Latest Project",
+    tag: "Featured",
     tagClass: "new",
     title: "TwilightVotes",
-    desc: "A community-driven polling and voting platform where users can create, share, and participate in real-time polls. Features live vote tallying, category browsing, and an intuitive UI designed to make public opinion feel engaging and immediate.",
-    tech: ["React", "Node.js", "MongoDB", "Express", "REST API"],
+    desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
+    tech: ["React", "TypeScript", "Tailwind CSS", "TanStack Query"],
     link: "https://www.twilightvotes.com/",
     featured: true,
   },
   {
     id: "02",
-    tag: "Project",
-    title: "Developer Portfolio",
-    desc: "This portfolio site — a React SPA showcasing projects, skills, and experience with a clean, modern design.",
-    tech: ["React", "CSS3", "GitHub Pages"],
-    link: "https://www.johndyates.com/",
+    tag: "Latest",
+    tagClass: "new",
+    title: "VAULT",
+    desc: "A brutalist explorer for the Art Institute of Chicago - search, filter, and pin 65,000+ artworks straight from the museum's open-access API, with debounced, URL-synced search.",
+    tech: ["TypeScript", "React", "Vite", "REST API"],
+    link: "https://github.com/cycoconutz/vault",
   },
   {
     id: "03",
     tag: "Project",
-    title: "Full-Stack CRUD App",
-    desc: "A full-stack application featuring user authentication, database persistence, and a responsive frontend interface built with React and Node.",
-    tech: ["React", "Node.js", "MySQL", "Express", "JWT"],
-    link: "https://github.com/cycoconutz",
+    title: "Solace",
+    desc: "A soft pastel glassmorphism breathe-and-reflect app with guided breathing sessions and a mood journal, driven by pure CSS transitions and localStorage persistence.",
+    tech: ["TypeScript", "React", "Vite", "CSS"],
+    link: "https://github.com/cycoconutz/solace",
   },
   {
     id: "04",
     tag: "Project",
-    title: "E-Commerce Platform",
-    desc: "A feature-rich e-commerce storefront with cart management, product filtering, and integrated payment flow.",
-    tech: ["React", "Redux", "MongoDB", "Stripe"],
-    link: "https://github.com/cycoconutz",
+    title: "Karmatic",
+    desc: "A MERN-stack single-page app built as a three-person collaborative bootcamp capstone with authentication and live data.",
+    tech: ["JavaScript", "React", "Express", "MongoDB"],
+    link: "https://github.com/cycoconutz/Karmatic",
   },
   {
     id: "05",
     tag: "Project",
-    title: "GraphQL API",
-    desc: "RESTful to GraphQL migration for a social platform backend, enabling flexible client-driven data queries and real-time subscriptions.",
-    tech: ["GraphQL", "Apollo", "Node.js", "MongoDB"],
-    link: "https://github.com/cycoconutz",
+    title: "Developer Portfolio",
+    desc: "This portfolio site - a React SPA showcasing projects, skills, and experience with a clean, modern design.",
+    tech: ["React", "CSS3", "GitHub Pages"],
+    link: "https://www.johndyates.com/",
   },
-];
+];;
 
 const skills = [
   "JavaScript (ES6+)", "React.js", "Node.js", "Express.js",
