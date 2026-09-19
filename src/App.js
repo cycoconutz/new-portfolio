@@ -409,6 +409,35 @@ const styles = `
     border-color: var(--accent);
     color: var(--bg);
   }
+  .project-shell {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .project-shell .project-card {
+    flex: 1;
+  }
+  .project-live {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.8rem 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: var(--card);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .project-live:hover {
+    background: #0d1920;
+    color: var(--accent);
+  }
 
   /* Experience */
   .experience-list { max-width: 800px; }
@@ -614,6 +643,7 @@ const projects = [
     desc: "A MERN-stack single-page app built as a three-person collaborative bootcamp capstone with authentication and live data.",
     tech: ["JavaScript", "React", "Express", "MongoDB"],
     link: "https://github.com/cycoconutz/Karmatic",
+    live: "https://karmatic.onrender.com/",
   },
   {
     id: "06",
@@ -806,26 +836,37 @@ export default function Portfolio() {
         <h2 className="section-title reveal">Selected Projects</h2>
         <div className="projects-grid reveal">
           {projects.map((p) => (
-            <a
-              key={p.id}
-              href={p.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`project-card${p.featured ? " featured" : ""}`}
-            >
-              <div className="project-number">{p.id}</div>
-              <div className={`project-tag${p.tagClass ? ` ${p.tagClass}` : ""}`}>
-                {p.tag}
-              </div>
-              <div className="project-title">{p.title}</div>
-              <div className="project-desc">{p.desc}</div>
-              <div className="project-tech">
-                {p.tech.map((t) => (
-                  <span key={t} className="tech-pill">{t}</span>
-                ))}
-              </div>
-              <div className="project-link-icon">↗</div>
-            </a>
+            <div className="project-shell" key={p.id}>
+              <a
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`project-card${p.featured ? " featured" : ""}`}
+              >
+                <div className="project-number">{p.id}</div>
+                <div className={`project-tag${p.tagClass ? ` ${p.tagClass}` : ""}`}>
+                  {p.tag}
+                </div>
+                <div className="project-title">{p.title}</div>
+                <div className="project-desc">{p.desc}</div>
+                <div className="project-tech">
+                  {p.tech.map((t) => (
+                    <span key={t} className="tech-pill">{t}</span>
+                  ))}
+                </div>
+                <div className="project-link-icon">↗</div>
+              </a>
+              {p.live && (
+                <a
+                  href={p.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-live"
+                >
+                  Live demo ↗
+                </a>
+              )}
+            </div>
           ))}
         </div>
       </section>
