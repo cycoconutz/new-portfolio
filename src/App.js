@@ -417,13 +417,17 @@ const styles = `
   .project-shell .project-card {
     flex: 1;
   }
-  .project-live {
+  .project-links {
+    display: flex;
+    border-top: 1px solid var(--border);
+  }
+  .project-link {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
-    padding: 0.8rem 2rem;
-    border-top: 1px solid var(--border);
+    padding: 0.8rem 1rem;
     font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 0.16em;
@@ -434,7 +438,10 @@ const styles = `
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
   }
-  .project-live:hover {
+  .project-link + .project-link {
+    border-left: 1px solid var(--border);
+  }
+  .project-link:hover {
     background: #0d1920;
     color: var(--accent);
   }
@@ -609,6 +616,8 @@ const projects = [
     desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
     tech: ["React", "TypeScript", "Tailwind CSS", "TanStack Query"],
     link: "https://www.twilightvotes.com/",
+    live: "https://www.twilightvotes.com/",
+    repo: "https://github.com/cycoconutz/Twilight-Votes",
     featured: true,
   },
   {
@@ -619,6 +628,7 @@ const projects = [
     desc: "A full-stack vinyl marketplace with full-text catalog search, cart and transactional checkout, seller fulfillment dashboards, verified reviews, and an admin moderation back office.",
     tech: ["TypeScript", "React", "Fastify", "PostgreSQL", "Drizzle ORM"],
     link: "https://github.com/cycoconutz/deadwax",
+    repo: "https://github.com/cycoconutz/deadwax",
   },
   {
     id: "03",
@@ -626,7 +636,9 @@ const projects = [
     title: "VAULT",
     desc: "A brutalist explorer for the Art Institute of Chicago - search, filter, and pin 65,000+ artworks straight from the museum's open-access API, with debounced, URL-synced search.",
     tech: ["TypeScript", "React", "Vite", "REST API"],
-    link: "https://github.com/cycoconutz/vault",
+    link: "https://cycoconutz.github.io/vault/",
+    live: "https://cycoconutz.github.io/vault/",
+    repo: "https://github.com/cycoconutz/vault",
   },
   {
     id: "04",
@@ -634,7 +646,9 @@ const projects = [
     title: "Solace",
     desc: "A soft pastel glassmorphism breathe-and-reflect app with guided breathing sessions and a mood journal, driven by pure CSS transitions and localStorage persistence.",
     tech: ["TypeScript", "React", "Vite", "CSS"],
-    link: "https://github.com/cycoconutz/solace",
+    link: "https://cycoconutz.github.io/solace/",
+    live: "https://cycoconutz.github.io/solace/",
+    repo: "https://github.com/cycoconutz/solace",
   },
   {
     id: "05",
@@ -642,16 +656,19 @@ const projects = [
     title: "Karmatic",
     desc: "A MERN-stack single-page app built as a three-person collaborative bootcamp capstone with authentication and live data.",
     tech: ["JavaScript", "React", "Express", "MongoDB"],
-    link: "https://github.com/cycoconutz/Karmatic",
+    link: "https://karmatic.onrender.com/",
     live: "https://karmatic.onrender.com/",
+    repo: "https://github.com/cycoconutz/Karmatic",
   },
   {
     id: "06",
     tag: "Project",
-    title: "Developer Portfolio",
-    desc: "This portfolio site - a React SPA showcasing projects, skills, and experience with a clean, modern design.",
-    tech: ["React", "CSS3", "GitHub Pages"],
-    link: "https://www.johndyates.com/",
+    title: "Portfolio Tabs",
+    desc: "A tabbed portfolio where every project opens as its own themed page, each restyled around a completely different visual identity and stitched together with animated transitions.",
+    tech: ["TypeScript", "React", "Vite", "React Router"],
+    link: "https://cycoconutz.github.io/portfolio-tabs/",
+    live: "https://cycoconutz.github.io/portfolio-tabs/",
+    repo: "https://github.com/cycoconutz/portfolio-tabs",
   },
 ];
 
@@ -856,15 +873,29 @@ export default function Portfolio() {
                 </div>
                 <div className="project-link-icon">↗</div>
               </a>
-              {p.live && (
-                <a
-                  href={p.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-live"
-                >
-                  Live demo ↗
-                </a>
+              {(p.live || p.repo) && (
+                <div className="project-links">
+                  {p.live && (
+                    <a
+                      href={p.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="project-link"
+                    >
+                      Live demo ↗
+                    </a>
+                  )}
+                  {p.repo && (
+                    <a
+                      href={p.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="project-link"
+                    >
+                      Source ↗
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           ))}
