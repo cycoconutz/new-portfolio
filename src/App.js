@@ -627,7 +627,8 @@ const projects = [
     title: "Deadwax",
     desc: "A full-stack vinyl marketplace with full-text catalog search, cart and transactional checkout, seller fulfillment dashboards, verified reviews, and an admin moderation back office.",
     tech: ["TypeScript", "React", "Fastify", "PostgreSQL", "Drizzle ORM"],
-    link: "https://github.com/cycoconutz/deadwax",
+    link: "https://deadwax-exee.onrender.com/",
+    live: "https://deadwax-exee.onrender.com/",
     repo: "https://github.com/cycoconutz/deadwax",
   },
   {
@@ -664,7 +665,7 @@ const projects = [
     id: "06",
     tag: "Project",
     title: "Portfolio Tabs",
-    desc: "A tabbed portfolio where every project opens as its own themed page, each restyled around a completely different visual identity and stitched together with animated transitions.",
+    desc: "A project catalog where every project opens as its own themed page, each restyled around a completely different visual identity and stitched together with animated transitions.",
     tech: ["TypeScript", "React", "Vite", "React Router"],
     link: "https://cycoconutz.github.io/portfolio-tabs/",
     live: "https://cycoconutz.github.io/portfolio-tabs/",
