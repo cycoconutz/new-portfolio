@@ -609,7 +609,7 @@ const styles = `
 
 const projects = [
   {
-    id: "01",
+    id: "06",
     tag: "Featured",
     tagClass: "new",
     title: "TwilightVotes",
@@ -618,7 +618,7 @@ const projects = [
     link: "https://www.twilightvotes.com/",
     live: "https://www.twilightvotes.com/",
     repo: "https://github.com/cycoconutz/Twilight-Votes",
-    featured: true,
+    featured: false,
   },
   {
     id: "02",
@@ -664,12 +664,14 @@ const projects = [
   {
     id: "06",
     tag: "Project",
-    title: "Portfolio Tabs",
+    title: "Project Catalog",
     desc: "A project catalog where every project opens as its own themed page, each restyled around a completely different visual identity and stitched together with animated transitions.",
     tech: ["TypeScript", "React", "Vite", "React Router"],
     link: "https://cycoconutz.github.io/portfolio-tabs/",
     live: "https://cycoconutz.github.io/portfolio-tabs/",
     repo: "https://github.com/cycoconutz/portfolio-tabs",
+    featured: true,
+
   },
 ];
 
