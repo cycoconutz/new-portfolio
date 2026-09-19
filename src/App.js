@@ -609,16 +609,16 @@ const styles = `
 
 const projects = [
   {
-    id: "06",
+    id: "01",
     tag: "Featured",
     tagClass: "new",
-    title: "TwilightVotes",
-    desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
-    tech: ["React", "TypeScript", "Tailwind CSS", "TanStack Query"],
-    link: "https://www.twilightvotes.com/",
-    live: "https://www.twilightvotes.com/",
-    repo: "https://github.com/cycoconutz/Twilight-Votes",
-    featured: false,
+    title: "Project Catalog",
+    desc: "A project catalog where every project opens as its own themed page, each restyled around a completely different visual identity and stitched together with animated transitions.",
+    tech: ["TypeScript", "React", "Vite", "React Router"],
+    link: "https://cycoconutz.github.io/portfolio-tabs/",
+    live: "https://cycoconutz.github.io/portfolio-tabs/",
+    repo: "https://github.com/cycoconutz/portfolio-tabs",
+    featured: true,
   },
   {
     id: "02",
@@ -663,15 +663,13 @@ const projects = [
   },
   {
     id: "06",
-    tag: "Project",
-    title: "Project Catalog",
-    desc: "A project catalog where every project opens as its own themed page, each restyled around a completely different visual identity and stitched together with animated transitions.",
-    tech: ["TypeScript", "React", "Vite", "React Router"],
-    link: "https://cycoconutz.github.io/portfolio-tabs/",
-    live: "https://cycoconutz.github.io/portfolio-tabs/",
-    repo: "https://github.com/cycoconutz/portfolio-tabs",
-    featured: true,
-
+    tag: "Featured",
+    title: "TwilightVotes",
+    desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
+    tech: ["React", "TypeScript", "Tailwind CSS", "TanStack Query"],
+    link: "https://www.twilightvotes.com/",
+    live: "https://www.twilightvotes.com/",
+    repo: "https://github.com/cycoconutz/Twilight-Votes",
   },
 ];
 
