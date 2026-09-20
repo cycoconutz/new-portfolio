@@ -671,6 +671,16 @@ const projects = [
     live: "https://www.twilightvotes.com/",
     repo: "https://github.com/cycoconutz/Twilight-Votes",
   },
+  {
+    id: "07",
+    tag: "Project",
+    title: "Ledger",
+    desc: "A zero-backend revenue & receipt tracker: import CSV sales exports (like a Depop report), review revenue in a filterable table, and log expenses with categories, labels, and receipt photos — all stored on-device with IndexedDB.",
+    tech: ["JavaScript", "HTML/CSS", "IndexedDB", "CSV"],
+    link: "https://cycoconutz.github.io/revenue-tracker/",
+    live: "https://cycoconutz.github.io/revenue-tracker/",
+    repo: "https://github.com/cycoconutz/revenue-tracker",
+  },
 ];
 
 
