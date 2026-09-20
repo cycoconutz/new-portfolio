@@ -644,16 +644,6 @@ const projects = [
   {
     id: "04",
     tag: "Project",
-    title: "Solace",
-    desc: "A soft pastel glassmorphism breathe-and-reflect app with guided breathing sessions and a mood journal, driven by pure CSS transitions and localStorage persistence.",
-    tech: ["TypeScript", "React", "Vite", "CSS"],
-    link: "https://cycoconutz.github.io/solace/",
-    live: "https://cycoconutz.github.io/solace/",
-    repo: "https://github.com/cycoconutz/solace",
-  },
-  {
-    id: "05",
-    tag: "Project",
     title: "Karmatic",
     desc: "A MERN-stack single-page app built as a three-person collaborative bootcamp capstone with authentication and live data.",
     tech: ["JavaScript", "React", "Express", "MongoDB"],
@@ -662,7 +652,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/Karmatic",
   },
   {
-    id: "06",
+    id: "05",
     tag: "Featured",
     title: "TwilightVotes",
     desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
@@ -672,7 +662,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/Twilight-Votes",
   },
   {
-    id: "07",
+    id: "06",
     tag: "Project",
     title: "Ledger",
     desc: "A zero-backend revenue & receipt tracker: import CSV sales exports (like a Depop report), review revenue in a filterable table, and log expenses with categories, labels, and receipt photos — all stored on-device with IndexedDB.",
