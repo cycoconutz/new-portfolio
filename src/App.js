@@ -1,721 +1,262 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #080b10;
-    --surface: #0e1319;
-    --border: rgba(255,255,255,0.07);
-    --accent: #00e5ff;
-    --accent2: #ff6b35;
-    --text: #e8edf2;
-    --muted: #64748b;
-    --card: #111820;
+    --bg: #0a0c0f;
+    --panel: #101319;
+    --line: rgba(226, 232, 240, 0.09);
+    --text: #d6dce5;
+    --muted: #7d8694;
+    --faint: #565e6b;
+    --accent: #e8ae4b;
+    --ok: #7bd88f;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
   }
 
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--mono);
     background: var(--bg);
     color: var(--text);
+    -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-
-  // /* Custom cursor */
-  // .cursor {
-  //   width: 8px; height: 8px;
-  //   background: var(--accent);
-  //   border-radius: 50%;
-  //   position: fixed;
-  //   pointer-events: none;
-  //   z-index: 9999;
-  //   transition: transform 0.1s;
-  //   mix-blend-mode: difference;
-  // }
-  // .cursor-ring {
-  //   width: 32px; height: 32px;
-  //   border: 1px solid var(--accent);
-  //   border-radius: 50%;
-  //   position: fixed;
-  //   pointer-events: none;
-  //   z-index: 9998;
-  //   transition: all 0.15s ease;
-  //   opacity: 0.5;
-  // }
-
-  /* Noise overlay */
-  .noise {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    opacity: 0.025;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 128px;
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 26px 26px;
+    mask-image: linear-gradient(to bottom, black 0%, black 18%, transparent 55%);
   }
+  .wrap { position: relative; z-index: 1; max-width: 70rem; margin: 0 auto; padding: 0 2rem; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
 
   /* Nav */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem 4rem;
-    transition: background 0.3s, backdrop-filter 0.3s;
-  }
-  nav.scrolled {
-    background: rgba(8,11,16,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
-    letter-spacing: 0.08em;
-    color: var(--text);
-    text-decoration: none;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-    position: relative;
-  }
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px; left: 0;
-    width: 0; height: 1px;
-    background: var(--accent);
-    transition: width 0.3s;
-  }
-  .nav-links a:hover { color: var(--text); }
-  .nav-links a:hover::after { width: 100%; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 2rem 0; border-bottom: 1px solid var(--line); }
+  .brand { font-size: 0.85rem; font-weight: 500; color: var(--text); text-decoration: none; }
+  .brand b { color: var(--accent); font-weight: 500; }
+  .brand .hint { color: var(--muted); }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a { font-size: 0.75rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a .slash { color: var(--faint); }
 
   /* Hero */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 0 4rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-  }
-  .hero-glow {
-    position: absolute;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
-    left: -100px; top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  .hero-content { position: relative; z-index: 2; max-width: 900px; }
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.6s ease forwards 0.2s;
-  }
-  .hero-eyebrow::before {
-    content: '';
-    width: 40px; height: 1px;
-    background: var(--accent);
-  }
+  .hero { padding: 6.5rem 0 5.5rem; }
+  .cmd { font-size: 0.8rem; color: var(--faint); margin-bottom: 2.4rem; }
+  .cmd b { color: var(--accent); font-weight: 500; }
   .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(5rem, 12vw, 11rem);
-    line-height: 0.9;
-    letter-spacing: 0.02em;
-    color: var(--text);
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.4s;
+    font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 800; line-height: 1.02;
+    letter-spacing: -0.02em;
   }
-  .hero-title .accent-line { color: var(--accent); display: block; }
-  .hero-sub {
-    margin-top: 2rem;
-    font-size: 1.1rem;
-    font-weight: 300;
-    color: var(--muted);
-    max-width: 480px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.6s;
+  .cursor {
+    display: inline-block; width: 0.55em; height: 1.02em; margin-left: 0.18em;
+    background: var(--accent); vertical-align: text-bottom;
+    animation: blink 1.1s steps(1) infinite;
   }
-  .hero-cta {
-    margin-top: 3rem;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.8s;
+  @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  .hero-role { margin-top: 1.1rem; font-size: 0.92rem; color: var(--muted); }
+  .hero-role b { color: var(--ok); font-weight: 500; }
+  .hero-sub { margin-top: 2rem; max-width: 34rem; font-size: 0.86rem; font-weight: 300; line-height: 1.8; color: var(--muted); }
+  .hero-cta { margin-top: 2.6rem; display: flex; align-items: center; gap: 1.2rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--accent); color: #101012;
+    padding: 0.8rem 1.6rem; border-radius: 6px; text-decoration: none;
+    font-size: 0.78rem; font-weight: 600; transition: background .2s, transform .15s;
+    cursor: pointer; border: none;
   }
-  .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
-    padding: 0.85rem 2.5rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-  }
-  .btn-primary:hover { background: #33ecff; transform: translateY(-2px); }
+  .btn:hover { background: #f2bc60; transform: translateY(-1px); }
   .btn-ghost {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color 0.2s;
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    color: var(--text); text-decoration: none; font-size: 0.78rem; font-weight: 500;
+    border: 1px solid var(--line); border-radius: 6px; padding: 0.8rem 1.4rem;
+    transition: border-color .2s, color .2s;
   }
-  .btn-ghost:hover { color: var(--text); }
-  .btn-ghost svg { transition: transform 0.2s; }
-  .btn-ghost:hover svg { transform: translateX(4px); }
-
-  /* Scroll indicator */
-  .scroll-indicator {
-    position: absolute;
-    bottom: 3rem; left: 4rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 1.2s;
-  }
-  .scroll-line {
-    width: 1px; height: 60px;
-    background: linear-gradient(to bottom, transparent, var(--muted));
-    animation: scrollPulse 2s ease infinite;
-  }
-  .scroll-text {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    writing-mode: vertical-rl;
-  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-meta { margin-top: 3rem; font-size: 0.76rem; color: var(--faint); line-height: 2; }
+  .hero-meta .k { color: var(--muted); }
 
   /* Sections */
-  section {
-    padding: 8rem 4rem;
-    position: relative;
-    z-index: 2;
-  }
-  .section-label {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
-  .section-label::before {
-    content: '';
-    width: 30px; height: 1px;
-    background: var(--accent);
-  }
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 7vw, 6rem);
-    line-height: 1;
-    letter-spacing: 0.03em;
-    color: var(--text);
-    margin-bottom: 4rem;
-  }
+  section { padding: 6rem 0; border-top: 1px solid var(--line); }
+  .sec-cmd { font-size: 0.8rem; color: var(--faint); margin-bottom: 2.6rem; }
+  .sec-cmd b { color: var(--accent); font-weight: 500; }
+  .sec-title { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -0.01em; margin-bottom: 3rem; }
 
   /* About */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: start;
-    max-width: 1200px;
+  .about-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 4rem; }
+  .about-text { font-size: 0.86rem; font-weight: 300; line-height: 1.9; color: var(--muted); }
+  .about-text p + p { margin-top: 1.4rem; }
+  .about-text strong { color: var(--text); font-weight: 600; }
+  .skill-group + .skill-group { margin-top: 2rem; }
+  .skill-cat { font-size: 0.74rem; color: var(--accent); margin-bottom: 0.9rem; }
+  .skill-cat::before { content: '> '; color: var(--faint); }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .chip {
+    font-size: 0.72rem; color: var(--text); border: 1px solid var(--line);
+    background: var(--panel); padding: 0.42rem 0.7rem; border-radius: 4px;
   }
-  .about-text {
-    font-size: 1.1rem;
-    font-weight: 300;
-    line-height: 1.85;
-    color: #a0aec0;
-  }
-  .about-text p + p { margin-top: 1.5rem; }
-  .about-text strong { color: var(--text); font-weight: 500; }
-  .skills-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  .skill-item {
-    background: var(--card);
-    border: 1px solid var(--border);
-    padding: 1rem 1.25rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    color: var(--muted);
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .skill-item::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 2px;
-    background: var(--accent);
-    transform: scaleY(0);
-    transition: transform 0.2s;
-  }
-  .skill-item:hover { color: var(--text); border-color: rgba(0,229,255,0.2); }
-  .skill-item:hover::before { transform: scaleY(1); }
+  .chip::before { content: '['; color: var(--faint); }
+  .chip::after { content: ']'; color: var(--faint); }
 
   /* Projects */
-  .projects-section { background: var(--surface); }
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 1.5px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    max-width: 1400px;
+  .project-row {
+    display: grid; grid-template-columns: 4.2rem 1fr auto; gap: 1.8rem;
+    align-items: baseline; padding: 2.4rem 0; border-top: 1px solid var(--line);
   }
-  .project-card {
-    background: var(--card);
-    padding: 2.5rem;
-    transition: background 0.2s;
-    position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    display: block;
-    cursor: pointer;
+  .project-row:last-child { border-bottom: 1px solid var(--line); }
+  .p-num { font-size: 0.78rem; color: var(--faint); }
+  .p-num::before { content: './'; color: var(--accent); }
+  .p-title-row { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+  .p-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; transition: color .2s; }
+  .project-row:hover .p-title { color: var(--accent); }
+  .p-tag {
+    font-size: 0.64rem; color: var(--ok); border: 1px solid rgba(123,216,143,0.4);
+    padding: 0.18rem 0.5rem; border-radius: 4px;
   }
-  .project-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .project-card:hover { background: #141e28; }
-  .project-card:hover::after { opacity: 1; }
-  .project-card.featured {
-    grid-column: span 2;
-    background: #0d1920;
-  }
-  .project-tag {
-    display: inline-block;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.25rem;
-  }
-  .project-tag.new { color: var(--accent2); }
-  .project-number {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 4rem;
-    color: rgba(255,255,255,0.04);
-    line-height: 1;
-    position: absolute;
-    top: 1.5rem; right: 2rem;
-    letter-spacing: 0.05em;
-    pointer-events: none;
-  }
-  .project-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    letter-spacing: 0.04em;
-    color: var(--text);
-    margin-bottom: 0.75rem;
-    transition: color 0.2s;
-  }
-  .project-card:hover .project-title { color: var(--accent); }
-  .project-desc {
-    font-size: 0.875rem;
-    font-weight: 300;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-  }
-  .project-tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  .tech-pill {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 0.3rem 0.75rem;
-  }
-  .project-link-icon {
-    position: absolute;
-    bottom: 2rem; right: 2rem;
-    width: 36px; height: 36px;
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    transition: all 0.2s;
-    font-size: 0.9rem;
-  }
-  .project-card:hover .project-link-icon {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
-  }
-  .project-shell {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-  .project-shell .project-card {
-    flex: 1;
-  }
-  .project-links {
-    display: flex;
-    border-top: 1px solid var(--border);
-  }
-  .project-link {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.8rem 1rem;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    background: var(--card);
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-  }
-  .project-link + .project-link {
-    border-left: 1px solid var(--border);
-  }
-  .project-link:hover {
-    background: #0d1920;
-    color: var(--accent);
-  }
-  .catalog-cta {
-    display: flex;
-    justify-content: center;
-    margin-top: 3rem;
-  }
+  .p-desc { margin-top: 0.8rem; max-width: 38rem; font-size: 0.78rem; font-weight: 300; line-height: 1.85; color: var(--muted); }
+  .p-tech { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; list-style: none; }
+  .p-tech li { font-size: 0.68rem; color: var(--faint); }
+  .p-tech li::before { content: '['; }
+  .p-tech li::after { content: ']'; }
+  .p-links { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-end; }
+  .p-links a { font-size: 0.74rem; font-weight: 500; color: var(--muted); text-decoration: none; transition: color .2s; }
+  .p-links a:hover { color: var(--accent); }
+  .catalog-cta { display: flex; justify-content: center; margin-top: 3rem; }
   .catalog-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 0.9rem 2rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--panel); border: 1px solid var(--line); color: var(--text);
+    padding: 0.85rem 1.8rem; border-radius: 6px;
+    font-size: 0.74rem; font-weight: 600; text-decoration: none;
+    transition: color .2s, border-color .2s, transform .15s;
   }
-  .catalog-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateY(-2px);
-  }
-  .catalog-arrow {
-    transition: transform 0.2s;
-  }
-  .catalog-btn:hover .catalog-arrow {
-    transform: translateX(4px);
-  }
+  .catalog-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .catalog-arrow { transition: transform 0.2s; }
+  .catalog-btn:hover .catalog-arrow { transform: translateX(4px); }
 
   /* Experience */
-  .experience-list { max-width: 800px; }
-  .exp-item {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 3rem;
-    padding: 2.5rem 0;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .exp-item:first-child { border-top: 1px solid var(--border); }
-  .exp-date {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding-top: 0.2rem;
-  }
-  .exp-role {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: 0.04em;
-    color: var(--text);
-    margin-bottom: 0.25rem;
-  }
-  .exp-company {
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-  }
-  .exp-desc {
-    font-size: 0.875rem;
-    font-weight: 300;
-    color: var(--muted);
-    line-height: 1.7;
-  }
+  .exp-row { display: grid; grid-template-columns: 11rem 1fr; gap: 2.6rem; padding: 2.2rem 0; border-top: 1px solid var(--line); }
+  .exp-row:last-child { border-bottom: 1px solid var(--line); }
+  .exp-date { font-size: 0.76rem; color: var(--faint); padding-top: 0.3rem; }
+  .exp-role { font-size: 1.15rem; font-weight: 700; }
+  .exp-company { font-size: 0.72rem; color: var(--accent); margin: 0.5rem 0 0.8rem; }
+  .exp-company::before { content: '@ '; }
+  .exp-desc { font-size: 0.8rem; font-weight: 300; line-height: 1.85; color: var(--muted); max-width: 40rem; }
 
   /* Contact */
-  .contact-section {
-    background: var(--surface);
-    text-align: center;
-  }
-  .contact-big {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(4rem, 10vw, 9rem);
-    line-height: 0.9;
-    letter-spacing: 0.02em;
-    color: rgba(255,255,255,0.06);
-    margin-bottom: -2rem;
-    pointer-events: none;
-    user-select: none;
-  }
+  .contact { text-align: center; }
+  .contact .sec-cmd { display: flex; justify-content: center; }
+  .contact-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.02em; }
+  .contact-sub { margin: 1.4rem auto 0; max-width: 30rem; font-size: 0.82rem; font-weight: 300; line-height: 1.9; color: var(--muted); }
   .contact-email {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2rem, 5vw, 4rem);
-    letter-spacing: 0.05em;
-    color: var(--text);
-    text-decoration: none;
-    position: relative;
-    display: inline-block;
-    transition: color 0.2s;
+    display: inline-block; margin-top: 2.6rem;
+    font-size: clamp(1.3rem, 3.4vw, 2rem); font-weight: 600; color: var(--accent);
+    text-decoration: none; border-bottom: 1px dashed rgba(232,174,75,0.4); padding-bottom: 4px;
   }
-  .contact-email::after {
-    content: '';
-    position: absolute;
-    bottom: -4px; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transition: transform 0.3s;
+  .contact-email:hover { border-bottom-style: solid; }
+  .socials { display: flex; justify-content: center; gap: 1rem; margin-top: 3.2rem; flex-wrap: wrap; }
+  .socials a {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    font-size: 0.74rem; color: var(--muted); text-decoration: none;
+    border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem 1.2rem;
+    transition: color .2s, border-color .2s;
   }
-  .contact-email:hover { color: var(--accent); }
-  .contact-email:hover::after { transform: scaleX(1); }
-  .social-links {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-  .social-link {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .social-link:hover { color: var(--accent); }
+  .socials a:hover { color: var(--accent); border-color: var(--accent); }
+  .socials svg { width: 13px; height: 13px; }
 
   /* Footer */
-  footer {
-    padding: 2rem 4rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    z-index: 2;
-  }
-  footer span {
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-  }
+  footer { border-top: 1px solid var(--line); }
+  .foot { display: flex; justify-content: space-between; align-items: center; padding: 1.8rem 0; font-size: 0.72rem; color: var(--faint); }
+  .foot span b { color: var(--accent); font-weight: 500; }
+  .foot .ok { color: var(--ok); }
 
-  /* Divider */
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--border), transparent);
-    margin: 0;
-  }
-
-  /* Animations */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-  }
-
-  /* Intersection observer reveal */
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .reveal-delay-4 { transition-delay: 0.4s; }
-
-  /* Responsive */
-  @media (max-width: 900px) {
-    nav { padding: 1.5rem 2rem; }
-    .nav-links { display: none; }
-    section { padding: 6rem 2rem; }
-    .hero { padding: 0 2rem; }
+  @media (max-width: 860px) {
+    nav { flex-direction: column; gap: 1rem; padding: 1.4rem 2rem; align-items: flex-start; }
+    .wrap { padding: 0 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero { padding: 4rem 0; }
     .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .projects-grid { grid-template-columns: 1fr; }
-    .project-card.featured { grid-column: span 1; }
-    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
-    footer { padding: 2rem; flex-direction: column; gap: 1rem; text-align: center; }
-    .scroll-indicator { display: none; }
+    .project-row { grid-template-columns: 1fr; gap: 0.8rem; }
+    .p-links { flex-direction: row; align-items: center; }
+    .exp-row { grid-template-columns: 1fr; gap: 0.5rem; }
+    .foot { flex-direction: column; gap: 0.6rem; }
   }
 `;
 
 const projects = [
   {
-    id: "01",
-    tag: "Featured",
-    tagClass: "new",
+    num: "./01",
     title: "Lulla",
+    tag: "featured",
     desc: "A calm, local-first baby & parent tracker — one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
     tech: ["TypeScript", "React", "Vite", "PWA", "Neon"],
-    link: "https://cycoconutz.github.io/lulla-landing/",
     live: "https://cycoconutz.github.io/lulla-landing/",
     repo: "https://github.com/cycoconutz/lulla",
-    featured: true,
   },
   {
-    id: "02",
-    tag: "Latest",
-    tagClass: "new",
+    num: "./02",
     title: "Deadwax",
+    tag: "latest",
     desc: "A full-stack vinyl marketplace with full-text catalog search, cart and transactional checkout, seller fulfillment dashboards, verified reviews, and an admin moderation back office.",
     tech: ["TypeScript", "React", "Fastify", "PostgreSQL", "Drizzle ORM"],
-    link: "https://deadwax-exee.onrender.com/",
     live: "https://deadwax-exee.onrender.com/",
     repo: "https://github.com/cycoconutz/deadwax",
   },
   {
-    id: "03",
-    tag: "Project",
+    num: "./03",
     title: "VAULT",
-    desc: "A brutalist explorer for the Art Institute of Chicago - search, filter, and pin 65,000+ artworks straight from the museum's open-access API, with debounced, URL-synced search.",
+    tag: "project",
+    desc: "A brutalist explorer for the Art Institute of Chicago — search, filter, and pin 65,000+ artworks straight from the museum's open-access API, with debounced, URL-synced search.",
     tech: ["TypeScript", "React", "Vite", "REST API"],
-    link: "https://cycoconutz.github.io/vault/",
     live: "https://cycoconutz.github.io/vault/",
     repo: "https://github.com/cycoconutz/vault",
   },
   {
-    id: "04",
-    tag: "Project",
+    num: "./04",
     title: "Karmatic",
+    tag: "project",
     desc: "A MERN-stack single-page app built as a three-person collaborative bootcamp capstone with authentication and live data.",
     tech: ["JavaScript", "React", "Express", "MongoDB"],
-    link: "https://karmatic.onrender.com/",
     live: "https://karmatic.onrender.com/",
     repo: "https://github.com/cycoconutz/Karmatic",
   },
   {
-    id: "05",
-    tag: "Featured",
+    num: "./05",
     title: "TwilightVotes",
+    tag: "featured",
     desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
     tech: ["React", "TypeScript", "Tailwind CSS", "TanStack Query"],
-    link: "https://www.twilightvotes.com/",
     live: "https://www.twilightvotes.com/",
     repo: "https://github.com/cycoconutz/Twilight-Votes",
   },
   {
-    id: "06",
-    tag: "Project",
+    num: "./06",
     title: "Ledger",
+    tag: "project",
     desc: "A zero-backend revenue & receipt tracker: import CSV sales exports (like a Depop report), review revenue in a filterable table, and log expenses with categories, labels, and receipt photos — all stored on-device with IndexedDB.",
     tech: ["JavaScript", "HTML/CSS", "IndexedDB", "CSV"],
-    link: "https://cycoconutz.github.io/revenue-tracker/",
     live: "https://cycoconutz.github.io/revenue-tracker/",
     repo: "https://github.com/cycoconutz/revenue-tracker",
   },
 ];
 
-
-const skills = [
-  "JavaScript (ES6+)", "React.js", "Node.js", "Express.js",
-  "MySQL", "MongoDB", "GraphQL", "REST APIs",
-  "jQuery", "HTML5 / CSS3", "Git / GitHub", "Figma",
-  "Jest / Testing", "Handlebars", "Salesforce", "IndexedDB",
+const skillGroups = [
+  { cat: "LANGUAGES", items: ["JavaScript (ES6+)", "TypeScript", "Python"] },
+  { cat: "FRONTEND", items: ["React 18/19", "Redux", "HTML5", "CSS3", "Tailwind CSS"] },
+  { cat: "BACKEND & DATA", items: ["Node.js / Express", "GraphQL / Apollo", "REST APIs", "MySQL", "MongoDB"] },
+  { cat: "TOOLING & WORKFLOW", items: ["Jest", "Vite", "Git / GitHub", "Figma", "AI-Assisted Tooling"] },
 ];
 
 const experience = [
   {
-    date: "2022 — Present",
+    date: "2022 — present",
     role: "Web Developer",
     company: "KUKUI",
     desc: "Building and maintaining web solutions for automotive service businesses. Integrating point-of-sale platforms, inventory systems, and employee scheduling tools while ensuring performance and reliability across client deployments.",
@@ -741,277 +282,232 @@ function useReveal() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     );
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    const els = document.querySelectorAll(".reveal");
+    els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 }
 
 export default function Portfolio() {
-  const [scrolled, setScrolled] = useState(false);
-  const [cursor, setCursor] = useState({ x: 0, y: 0 });
-  const [ring, setRing] = useState({ x: 0, y: 0 });
-  const ringRef = useRef({ x: 0, y: 0 });
-  const animRef = useRef(null);
-
   useReveal();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleMove = (e) => {
-      setCursor({ x: e.clientX - 4, y: e.clientY - 4 });
-      const target = { x: e.clientX - 16, y: e.clientY - 16 };
-      const animate = () => {
-        ringRef.current.x += (target.x - ringRef.current.x) * 0.12;
-        ringRef.current.y += (target.y - ringRef.current.y) * 0.12;
-        setRing({ x: ringRef.current.x, y: ringRef.current.y });
-        animRef.current = requestAnimationFrame(animate);
-      };
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-      animRef.current = requestAnimationFrame(animate);
-    };
-    window.addEventListener("mousemove", handleMove);
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-    };
-  }, []);
 
   return (
     <>
       <style>{styles}</style>
-      <div className="noise" />
 
-      {/* Custom Cursor */}
-      <div className="cursor" style={{ left: cursor.x, top: cursor.y }} />
-      <div className="cursor-ring" style={{ left: ring.x, top: ring.y }} />
-
-      {/* Nav */}
-      <nav className={scrolled ? "scrolled" : ""}>
-        <a href="#top" className="nav-logo">
-          J<span>.</span>YATES
-        </a>
-        <ul className="nav-links">
-          {["About", "Projects", "Experience", "Contact"].map((item) => (
-            <li key={item}>
-              <a href={`#${item.toLowerCase()}`}>{item}</a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      {/* Hero */}
-      <section id="top" className="hero">
-        <div className="hero-grid" />
-        <div className="hero-glow" />
-        <div className="hero-content">
-          <div className="hero-eyebrow">Full-Stack Web Developer</div>
-          <h1 className="hero-title">
-            John
-            <span className="accent-line">Yates</span>
-          </h1>
-          <p className="hero-sub">
-            I build fast, modern web applications from front to back —
-            clean interfaces, solid APIs, and everything in between.
-          </p>
-          <div className="hero-cta">
-            <a href="#projects" className="btn-primary">View Work</a>
-            <a href="#contact" className="btn-ghost">
-              Get In Touch
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-        <div className="scroll-indicator">
-          <div className="scroll-line" />
-          <span className="scroll-text">Scroll</span>
-        </div>
-      </section>
-
-      <div className="divider" />
-
-      {/* About */}
-      <section id="about">
-        <div className="section-label reveal">About</div>
-        <h2 className="section-title reveal">Who I Am</h2>
-        <div className="about-grid">
-          <div className="about-text reveal">
-            <p>
-              I'm a <strong>full-stack web developer</strong> based in the US,
-              currently building web solutions at <strong>KUKUI</strong> for automotive
-              service businesses. I love turning complex problems into clean,
-              intuitive digital experiences.
-            </p>
-            <p>
-              My background spans the entire stack — from responsive React frontends
-              to Node/Express APIs backed by MySQL and MongoDB. I care deeply about
-              <strong> code quality, performance,</strong> and shipping things
-              that actually work.
-            </p>
-            <p>
-              When I'm not coding, you'll find me exploring new frameworks,
-              contributing to side projects, or leveling up my skills in whatever's
-              new and interesting in the dev world.
-            </p>
-          </div>
-          <div>
-            <div className="section-label reveal" style={{ marginBottom: "1.5rem" }}>Tech Stack</div>
-            <div className="skills-grid reveal">
-              {skills.map((skill, i) => (
-                <div key={skill} className={`skill-item reveal-delay-${(i % 4) + 1}`}>
-                  {skill}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="divider" />
-
-      {/* Projects */}
-      <section id="projects" className="projects-section">
-        <div className="section-label reveal">Work</div>
-        <h2 className="section-title reveal">Selected Projects</h2>
-        <div className="projects-grid reveal">
-          {projects.map((p) => (
-            <div className="project-shell" key={p.id}>
-              <a
-                href={p.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`project-card${p.featured ? " featured" : ""}`}
-              >
-                <div className="project-number">{p.id}</div>
-                <div className={`project-tag${p.tagClass ? ` ${p.tagClass}` : ""}`}>
-                  {p.tag}
-                </div>
-                <div className="project-title">{p.title}</div>
-                <div className="project-desc">{p.desc}</div>
-                <div className="project-tech">
-                  {p.tech.map((t) => (
-                    <span key={t} className="tech-pill">{t}</span>
-                  ))}
-                </div>
-                <div className="project-link-icon">↗</div>
-              </a>
-              {(p.live || p.repo) && (
-                <div className="project-links">
-                  {p.live && (
-                    <a
-                      href={p.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-link"
-                    >
-                      Live demo ↗
-                    </a>
-                  )}
-                  {p.repo && (
-                    <a
-                      href={p.repo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-link"
-                    >
-                      Source ↗
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="catalog-cta reveal">
-          <a
-            href="https://cycoconutz.github.io/portfolio-tabs/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="catalog-btn"
-          >
-            View the full project catalog
-            <span className="catalog-arrow">→</span>
+      <div className="wrap">
+        <nav>
+          <a href="#top" className="brand">
+            <b>~</b>/john-yates <span className="hint">#</span>
           </a>
-        </div>
-      </section>
+          <ul className="nav-links">
+            {["About", "Projects", "Experience", "Contact"].map((item) => (
+              <li key={item}>
+                <a href={`#${item.toLowerCase()}`}>
+                  <span className="slash">/</span> {item.toLowerCase()}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-      <div className="divider" />
-
-      {/* Experience */}
-      <section id="experience">
-        <div className="section-label reveal">Career</div>
-        <h2 className="section-title reveal">Experience</h2>
-        <div className="experience-list">
-          {experience.map((exp, i) => (
-            <div key={i} className={`exp-item reveal reveal-delay-${i + 1}`}>
-              <div className="exp-date">{exp.date}</div>
+        <main>
+          {/* Hero */}
+          <section id="top" className="hero">
+            <div className="cmd reveal">
+              <b>~</b> $ whoami
+            </div>
+            <h1 className="hero-title reveal">
+              john yates<span className="cursor" />
+            </h1>
+            <p className="hero-role reveal">
+              &nbsp;&nbsp;&nbsp;=&gt; <b>full-stack web developer</b>
+            </p>
+            <p className="hero-sub reveal">
+              I build fast, modern web applications from front to back —
+              clean interfaces, solid APIs, and everything in between.
+            </p>
+            <div className="hero-cta reveal">
+              <a href="#projects" className="btn">
+                ls projects <span>&#8595;</span>
+              </a>
+              <a href="#contact" className="btn-ghost">
+                get in touch
+              </a>
+            </div>
+            <div className="hero-meta reveal">
               <div>
-                <div className="exp-role">{exp.role}</div>
-                <div className="exp-company">{exp.company}</div>
-                <div className="exp-desc">{exp.desc}</div>
+                <span className="k">contact:</span> johndyates<span className="k">@</span>gmail.com
+              </div>
+              <div>
+                <span className="k">location:</span> lafayette, la &nbsp;
+                <span className="k">status:</span>{" "}
+                <span style={{ color: "var(--ok)" }}>available</span>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
 
-      <div className="divider" />
+          {/* About */}
+          <section id="about">
+            <div className="sec-cmd reveal">
+              <b>~</b> $ cat about.txt
+            </div>
+            <h2 className="sec-title reveal">who_i_am</h2>
+            <div className="about-grid">
+              <div className="about-text reveal">
+                <p>
+                  I'm a <strong>full-stack web developer</strong> based in the US, currently
+                  building web solutions at <strong>KUKUI</strong> for automotive service
+                  businesses. I love turning complex problems into clean, intuitive digital
+                  experiences.
+                </p>
+                <p>
+                  My background spans the entire stack — from responsive React frontends to
+                  Node/Express APIs backed by MySQL and MongoDB. I care deeply about{" "}
+                  <strong>code quality, performance,</strong> and shipping things that actually
+                  work.
+                </p>
+                <p>
+                  When I'm not coding, you'll find me exploring new frameworks, contributing to
+                  side projects, or leveling up my skills in whatever's new and interesting in
+                  the dev world.
+                </p>
+              </div>
+              <div className="skills reveal">
+                {skillGroups.map((group) => (
+                  <div className="skill-group" key={group.cat}>
+                    <div className="skill-cat">{group.cat}</div>
+                    <div className="chips">
+                      {group.items.map((item) => (
+                        <span className="chip" key={item}>
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
 
-      {/* Contact */}
-      <section id="contact" className="contact-section">
-        <div className="contact-big">Let's Talk</div>
-        <div className="section-label reveal" style={{ justifyContent: "center" }}>
-          Contact
-        </div>
-        <h2 className="section-title reveal" style={{ marginBottom: "1.5rem" }}>
-          Get In Touch
-        </h2>
-        <p className="reveal" style={{ color: "var(--muted)", maxWidth: 480, margin: "0 auto 2.5rem", lineHeight: 1.7, fontSize: "0.95rem" }}>
-          Open to new opportunities, collaborations, and interesting projects.
-          Drop me a line — I always respond.
-        </p>
-        <a href="mailto:johndannelyates@gmail.com" className="contact-email reveal">
-          johndyates@gmail.com
-        </a>
-        <div className="social-links reveal">
-          <a href="https://github.com/cycoconutz" target="_blank" rel="noopener noreferrer" className="social-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.1.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.01 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
-            </svg>
-            GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/danny-yates/" target="_blank" rel="noopener noreferrer" className="social-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.2 24 24 23.23 24 22.28V1.72C24 .77 23.2 0 22.23 0z"/>
-            </svg>
-            LinkedIn
-          </a>
-          <a href="https://github.com/cycoconutz/React-Portfolio" target="_blank" rel="noopener noreferrer" className="social-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-            </svg>
-            Source Code
-          </a>
-        </div>
-      </section>
+          {/* Projects */}
+          <section id="projects">
+            <div className="sec-cmd reveal">
+              <b>~</b> $ ls projects/
+            </div>
+            <h2 className="sec-title reveal">selected_projects</h2>
 
-      {/* Footer */}
-      <footer>
-        <span>© 2025 John Yates</span>
-        <span>Built with React</span>
-      </footer>
+            {projects.map((p) => (
+              <div className="project-row reveal" key={p.title}>
+                <div className="p-num">{p.num}</div>
+                <div>
+                  <div className="p-title-row">
+                    <h3 className="p-title">{p.title}</h3>
+                    <span className="p-tag">{p.tag}</span>
+                  </div>
+                  <p className="p-desc">{p.desc}</p>
+                  <ul className="p-tech">
+                    {p.tech.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="p-links">
+                  <a href={p.live} target="_blank" rel="noopener noreferrer">
+                    open &#8599;
+                  </a>
+                  <a href={p.repo} target="_blank" rel="noopener noreferrer">
+                    source &#8599;
+                  </a>
+                </div>
+              </div>
+            ))}
+
+            <div className="catalog-cta reveal">
+              <a
+                href="https://cycoconutz.github.io/portfolio-tabs/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="catalog-btn"
+              >
+                view the full project catalog <span className="catalog-arrow">&#8594;</span>
+              </a>
+            </div>
+          </section>
+
+          {/* Experience */}
+          <section id="experience">
+            <div className="sec-cmd reveal">
+              <b>~</b> $ cat experience.log
+            </div>
+            <h2 className="sec-title reveal">experience</h2>
+
+            {experience.map((exp) => (
+              <div className="exp-row reveal" key={exp.role}>
+                <div className="exp-date">{exp.date}</div>
+                <div>
+                  <div className="exp-role">{exp.role}</div>
+                  <div className="exp-company">{exp.company}</div>
+                  <p className="exp-desc">{exp.desc}</p>
+                </div>
+              </div>
+            ))}
+          </section>
+
+          {/* Contact */}
+          <section id="contact" className="contact">
+            <div className="sec-cmd reveal">
+              <b>~</b> $ mail --to johndyates
+            </div>
+            <h2 className="contact-title reveal">let's work together</h2>
+            <p className="contact-sub reveal">
+              Open to new opportunities, collaborations, and interesting projects.
+              Drop me a line — I always respond.
+            </p>
+            <a href="mailto:johndyates@gmail.com" className="contact-email reveal">
+              johndyates@gmail.com
+            </a>
+            <div className="socials reveal">
+              <a href="https://github.com/cycoconutz" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.1.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.01 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+                github
+              </a>
+              <a href="https://www.linkedin.com/in/danny-yates/" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46C23.2 24 24 23.23 24 22.28V1.72C24 .77 23.2 0 22.23 0z" />
+                </svg>
+                linkedin
+              </a>
+              <a href="https://github.com/cycoconutz/React-Portfolio" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+                source code
+              </a>
+            </div>
+          </section>
+        </main>
+
+        <footer>
+          <div className="foot">
+            <span>
+              © 2026 <b>john</b>-yates
+            </span>
+            <span>
+              <span className="ok">●</span> exit 0 &nbsp;·&nbsp; built with react
+            </span>
+          </div>
+        </footer>
+      </div>
     </>
   );
 }
