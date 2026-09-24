@@ -445,6 +445,38 @@ const styles = `
     background: #0d1920;
     color: var(--accent);
   }
+  .catalog-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+  }
+  .catalog-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.9rem 2rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .catalog-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .catalog-arrow {
+    transition: transform 0.2s;
+  }
+  .catalog-btn:hover .catalog-arrow {
+    transform: translateX(4px);
+  }
 
   /* Experience */
   .experience-list { max-width: 800px; }
@@ -612,12 +644,12 @@ const projects = [
     id: "01",
     tag: "Featured",
     tagClass: "new",
-    title: "Project Catalog",
-    desc: "A project catalog where every project opens as its own themed page, each restyled around a completely different visual identity and stitched together with animated transitions.",
-    tech: ["TypeScript", "React", "Vite", "React Router"],
-    link: "https://cycoconutz.github.io/portfolio-tabs/",
-    live: "https://cycoconutz.github.io/portfolio-tabs/",
-    repo: "https://github.com/cycoconutz/portfolio-tabs",
+    title: "Lulla",
+    desc: "A calm, local-first baby & parent tracker — one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
+    tech: ["TypeScript", "React", "Vite", "PWA", "Neon"],
+    link: "https://cycoconutz.github.io/lulla-landing/",
+    live: "https://cycoconutz.github.io/lulla-landing/",
+    repo: "https://github.com/cycoconutz/lulla",
     featured: true,
   },
   {
@@ -900,6 +932,17 @@ export default function Portfolio() {
               )}
             </div>
           ))}
+        </div>
+        <div className="catalog-cta reveal">
+          <a
+            href="https://cycoconutz.github.io/portfolio-tabs/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="catalog-btn"
+          >
+            View the full project catalog
+            <span className="catalog-arrow">→</span>
+          </a>
         </div>
       </section>
 
