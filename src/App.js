@@ -199,7 +199,7 @@ const projects = [
     tag: "featured",
     desc: "A calm, local-first baby & parent tracker — one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
     tech: ["TypeScript", "React", "Vite", "PWA", "Neon"],
-    live: "https://cycoconutz.github.io/lulla-landing/",
+    live: "https://lulla.dev/landing/",
     repo: "https://github.com/cycoconutz/lulla",
   },
   {
