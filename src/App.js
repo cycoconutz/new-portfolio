@@ -116,6 +116,8 @@ const styles = `
   .p-num::before { content: './'; color: var(--accent); }
   .p-title-row { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
   .p-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; transition: color .2s; }
+  .p-title-link { color: inherit; text-decoration: none; }
+  .p-title-link:hover { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; }
   .project-row:hover .p-title { color: var(--accent); }
   .p-tag {
     font-size: 0.64rem; color: var(--ok); border: 1px solid rgba(123,216,143,0.4);
@@ -192,7 +194,7 @@ const styles = `
 
 const projects = [
   {
-    num: "./01",
+    num: "01",
     title: "Lulla",
     tag: "featured",
     desc: "A calm, local-first baby & parent tracker — one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
@@ -201,7 +203,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/lulla",
   },
   {
-    num: "./02",
+    num: "02",
     title: "Deadwax",
     tag: "latest",
     desc: "A full-stack vinyl marketplace with full-text catalog search, cart and transactional checkout, seller fulfillment dashboards, verified reviews, and an admin moderation back office.",
@@ -210,7 +212,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/deadwax",
   },
   {
-    num: "./03",
+    num: "03",
     title: "VAULT",
     tag: "project",
     desc: "A brutalist explorer for the Art Institute of Chicago — search, filter, and pin 65,000+ artworks straight from the museum's open-access API, with debounced, URL-synced search.",
@@ -219,7 +221,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/vault",
   },
   {
-    num: "./04",
+    num: "04",
     title: "Karmatic",
     tag: "project",
     desc: "A MERN-stack single-page app built as a three-person collaborative bootcamp capstone with authentication and live data.",
@@ -228,7 +230,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/Karmatic",
   },
   {
-    num: "./05",
+    num: "05",
     title: "TwilightVotes",
     tag: "featured",
     desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
@@ -237,7 +239,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/Twilight-Votes",
   },
   {
-    num: "./06",
+    num: "06",
     title: "Ledger",
     tag: "project",
     desc: "A zero-backend revenue & receipt tracker: import CSV sales exports (like a Depop report), review revenue in a filterable table, and log expenses with categories, labels, and receipt photos — all stored on-device with IndexedDB.",
@@ -408,7 +410,14 @@ export default function Portfolio() {
                 <div className="p-num">{p.num}</div>
                 <div>
                   <div className="p-title-row">
-                    <h3 className="p-title">{p.title}</h3>
+                    <a
+                      href={p.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-title-link"
+                    >
+                      <h3 className="p-title">{p.title}</h3>
+                    </a>
                     <span className="p-tag">{p.tag}</span>
                   </div>
                   <p className="p-desc">{p.desc}</p>
