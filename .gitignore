@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# design exploration (kept on disk, not shipped)
+/design-samples

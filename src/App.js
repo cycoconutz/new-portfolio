@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 // RESUME_VERSION is rewritten automatically by the resume-generator on every
 // new resume. The ?v= query busts the CDN/browser cache so recruiters always
@@ -7,195 +7,203 @@ const RESUME_VERSION = "1.3.6";
 const RESUME_HREF = `${process.env.PUBLIC_URL || ""}/resume.pdf?v=${RESUME_VERSION}`;
 
 const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0a0c0f;
-    --panel: #101319;
-    --line: rgba(226, 232, 240, 0.09);
-    --text: #d6dce5;
-    --muted: #7d8694;
-    --faint: #565e6b;
-    --accent: #e8ae4b;
-    --ok: #7bd88f;
+    --slate: #23262b;
+    --panel: #2b2f35;
+    --pane: #1a1d21;
+    --alu: #c9ccd1;
+    --mut: #7d848d;
+    --faint: #5b626b;
+    --teal: #1c4e46;
+    --led: #f0a020;
+    --cable: #e0452f;
+    --line: rgba(201, 204, 209, 0.14);
+    --grot: 'Schibsted Grotesk', system-ui, sans-serif;
     --mono: 'JetBrains Mono', ui-monospace, monospace;
   }
 
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: var(--mono);
-    background: var(--bg);
-    color: var(--text);
+    font-family: var(--grot);
+    background: var(--slate);
+    color: var(--alu);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
   body::before {
-    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background-image: radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px);
-    background-size: 26px 26px;
-    mask-image: linear-gradient(to bottom, black 0%, black 18%, transparent 55%);
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
-  .wrap { position: relative; z-index: 1; max-width: 70rem; margin: 0 auto; padding: 0 2rem; }
+
+  .wrap { position: relative; z-index: 1; max-width: 76rem; margin: 0 auto; padding: 0 2rem; }
 
   /* Reveal */
   .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.visible { opacity: 1; transform: none; }
 
   /* Nav */
-  nav { display: flex; align-items: center; justify-content: space-between; padding: 2rem 0; border-bottom: 1px solid var(--line); }
-  .brand { font-size: 0.85rem; font-weight: 500; color: var(--text); text-decoration: none; }
-  .brand b { color: var(--accent); font-weight: 500; }
-  .brand .hint { color: var(--muted); }
-  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
-  .nav-links a { font-size: 0.75rem; color: var(--muted); text-decoration: none; transition: color .2s; }
-  .nav-links a:hover { color: var(--accent); }
-  .nav-links a .slash { color: var(--faint); }
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; color: var(--alu); text-decoration: none; letter-spacing: 0.02em; }
+  .brand .led { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--led); box-shadow: 0 0 10px var(--led); animation: pulse 2.6s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+  .nav-links { display: flex; gap: 1.7rem; list-style: none; }
+  .nav-links a { color: var(--mut); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: color .2s; }
+  .nav-links a:hover { color: var(--led); }
 
   /* Hero */
-  .hero { padding: 6.5rem 0 5.5rem; }
-  .cmd { font-size: 0.8rem; color: var(--faint); margin-bottom: 2.4rem; }
-  .cmd b { color: var(--accent); font-weight: 500; }
-  .hero-title {
-    font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 800; line-height: 1.02;
-    letter-spacing: -0.02em;
-  }
-  .cursor {
-    display: inline-block; width: 0.55em; height: 1.02em; margin-left: 0.18em;
-    background: var(--accent); vertical-align: text-bottom;
-    animation: blink 1.1s steps(1) infinite;
-  }
-  @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-  .hero-role { margin-top: 1.1rem; font-size: 0.92rem; color: var(--muted); }
-  .hero-role b { color: var(--ok); font-weight: 500; }
-  .hero-sub { margin-top: 2rem; max-width: 34rem; font-size: 0.86rem; font-weight: 300; line-height: 1.8; color: var(--muted); }
-  .hero-cta { margin-top: 2.6rem; display: flex; align-items: center; gap: 1.2rem; }
+  .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; padding: 4.5rem 0 3.5rem; }
+  .kicker { font-family: var(--mono); font-size: 0.72rem; color: var(--led); letter-spacing: 0.06em; margin-bottom: 1.3rem; }
+  .hero-title { font-weight: 700; font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1; letter-spacing: -0.03em; }
+  .hero-title em { font-style: normal; color: var(--led); }
+  .hero-sub { margin-top: 1.5rem; max-width: 32rem; font-size: 1.04rem; line-height: 1.7; color: #aeb4bb; }
+  .hero-sub b { color: var(--alu); font-weight: 600; }
+  .hero-cta { margin-top: 2.2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
   .btn {
-    display: inline-flex; align-items: center; gap: 0.6rem;
-    background: var(--accent); color: #101012;
-    padding: 0.8rem 1.6rem; border-radius: 6px; text-decoration: none;
-    font-size: 0.78rem; font-weight: 600; transition: background .2s, transform .15s;
-    cursor: pointer; border: none;
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    font-family: var(--grot); font-weight: 600; font-size: 0.85rem; text-decoration: none;
+    padding: 0.8rem 1.5rem; background: var(--led); color: #1a1d21;
+    border: none; border-radius: 6px; cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
   }
-  .btn:hover { background: #f2bc60; transform: translateY(-1px); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(240,160,32,0.3); }
   .btn-ghost {
-    display: inline-flex; align-items: center; gap: 0.6rem;
-    color: var(--text); text-decoration: none; font-size: 0.78rem; font-weight: 500;
-    border: 1px solid var(--line); border-radius: 6px; padding: 0.8rem 1.4rem;
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    font-family: var(--grot); font-weight: 500; font-size: 0.85rem; text-decoration: none;
+    padding: 0.8rem 1.4rem; background: transparent; color: var(--alu);
+    border: 1px solid rgba(201,204,209,0.3); border-radius: 6px;
     transition: border-color .2s, color .2s;
   }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-ghost:hover { border-color: var(--led); color: var(--led); }
   .cta-icon { width: 14px; height: 14px; flex: none; }
-  .hero-meta { margin-top: 3rem; font-size: 0.76rem; color: var(--faint); line-height: 2; }
-  .hero-meta .k { color: var(--muted); }
+  .hero-meta { margin-top: 2.6rem; font-family: var(--mono); font-size: 0.76rem; color: var(--mut); line-height: 2; }
+  .hero-meta .k { color: var(--faint); }
+  .hero-meta .ok { color: var(--led); }
+
+  /* Patch panel */
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 1.4rem; position: relative;
+    box-shadow: 0 30px 60px -30px #000, inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .panel .screw { position: absolute; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #4a5058, #22262b); box-shadow: inset 0 0 2px #000; }
+  .screw.tl { top: 0.55rem; left: 0.55rem; }
+  .screw.tr { top: 0.55rem; right: 0.55rem; }
+  .screw.bl { bottom: 0.55rem; left: 0.55rem; }
+  .screw.br { bottom: 0.55rem; right: 0.55rem; }
+  .panel svg { display: block; width: 100%; height: auto; }
+  .cablepath { fill: none; stroke: var(--cable); stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 6px rgba(224,69,47,0.5)); }
+  .sig { fill: none; stroke: #ffd9a0; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 16 240; animation: travel 3.4s linear infinite; }
+  @keyframes travel { to { stroke-dashoffset: -256; } }
+  .panel .plabel { position: absolute; bottom: 0.7rem; right: 1rem; font-family: var(--mono); font-size: 0.6rem; color: var(--faint); letter-spacing: 0.08em; }
+
+  /* Signal ribbon */
+  .ribbon { position: relative; background: var(--pane); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
+  .ribbon .band { display: flex; gap: 2.4rem; width: max-content; padding: 1.05rem 0; animation: roll 34s linear infinite; align-items: center; }
+  .ribbon:hover .band { animation-play-state: paused; }
+  .sigitem { display: inline-flex; align-items: center; gap: 0.7rem; white-space: nowrap; font-family: var(--mono); font-size: 0.86rem; color: var(--alu); }
+  .sigitem::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--teal); box-shadow: 0 0 8px rgba(28,78,70,0.9); }
+  .sigitem.on::before { background: var(--led); box-shadow: 0 0 8px var(--led); }
+  .ribbon .scan { position: absolute; top: 0; bottom: 0; width: 16rem; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(240,160,32,0.12), transparent); animation: scan 6s linear infinite; }
+  @keyframes scan { from { transform: translateX(-16rem); } to { transform: translateX(100vw); } }
+  @keyframes roll { to { transform: translateX(-50%); } }
 
   /* Sections */
-  section { padding: 6rem 0; border-top: 1px solid var(--line); }
-  .sec-cmd { font-size: 0.8rem; color: var(--faint); margin-bottom: 2.6rem; }
-  .sec-cmd b { color: var(--accent); font-weight: 500; }
-  .sec-title { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -0.01em; margin-bottom: 3rem; }
+  section { padding: 5rem 0; border-top: 1px solid var(--line); }
+  .sec-kicker { font-family: var(--mono); font-size: 0.74rem; color: var(--led); margin-bottom: 1rem; }
+  .sec-title { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -0.01em; margin-bottom: 2.6rem; }
 
   /* About */
-  .about-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 4rem; }
-  .about-text { font-size: 0.86rem; font-weight: 300; line-height: 1.9; color: var(--muted); }
-  .about-text p + p { margin-top: 1.4rem; }
-  .about-text strong { color: var(--text); font-weight: 600; }
-  .skill-group + .skill-group { margin-top: 2rem; }
-  .skill-cat { font-size: 0.74rem; color: var(--accent); margin-bottom: 0.9rem; }
-  .skill-cat::before { content: '> '; color: var(--faint); }
-  .chips { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-  .chip {
-    font-size: 0.72rem; color: var(--text); border: 1px solid var(--line);
-    background: var(--panel); padding: 0.42rem 0.7rem; border-radius: 4px;
-  }
-  .chip::before { content: '['; color: var(--faint); }
-  .chip::after { content: ']'; color: var(--faint); }
+  .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3.5rem; }
+  .about-text { font-size: 0.95rem; line-height: 1.85; color: #aeb4bb; }
+  .about-text p + p { margin-top: 1.3rem; }
+  .about-text strong { color: var(--alu); font-weight: 600; }
 
-  /* Projects */
-  .project-row {
-    display: grid; grid-template-columns: 4.2rem 1fr auto; gap: 1.8rem;
-    align-items: baseline; padding: 2.4rem 0; border-top: 1px solid var(--line);
-  }
-  .project-row:last-child { border-bottom: 1px solid var(--line); }
-  .p-num { font-size: 0.78rem; color: var(--faint); }
-  .p-num::before { content: './'; color: var(--accent); }
-  .p-title-row { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
-  .p-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; transition: color .2s; }
-  .p-title-link { color: inherit; text-decoration: none; }
-  .p-title-link:hover { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; }
-  .project-row:hover .p-title { color: var(--accent); }
-  .p-tag {
-    font-size: 0.64rem; color: var(--ok); border: 1px solid rgba(123,216,143,0.4);
-    padding: 0.18rem 0.5rem; border-radius: 4px;
-  }
-  .p-desc { margin-top: 0.8rem; max-width: 38rem; font-size: 0.78rem; font-weight: 300; line-height: 1.85; color: var(--muted); }
-  .p-tech { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; list-style: none; }
-  .p-tech li { font-size: 0.68rem; color: var(--faint); }
-  .p-tech li::before { content: '['; }
-  .p-tech li::after { content: ']'; }
-  .p-links { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-end; }
-  .p-links a { font-size: 0.74rem; font-weight: 500; color: var(--muted); text-decoration: none; transition: color .2s; }
-  .p-links a:hover { color: var(--accent); }
+  /* Patch points / modules */
+  .mod { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 1.3rem 1.5rem; margin-bottom: 1.1rem; display: grid; grid-template-columns: 14rem 1fr; gap: 1.6rem; align-items: center; transition: border-color .2s; }
+  .mod:hover { border-color: rgba(240,160,32,0.4); }
+  .mod .name { font-family: var(--mono); font-size: 0.72rem; color: var(--led); }
+  .mod .name big { display: block; font-family: var(--grot); font-weight: 600; font-size: 1.05rem; color: var(--alu); margin-top: 0.35rem; }
+  .jacks { display: flex; flex-wrap: wrap; gap: 1.4rem 1.8rem; }
+  .jack { display: flex; flex-direction: column; align-items: center; gap: 0.45rem; }
+  .jack .hole { width: 1.35rem; height: 1.35rem; border-radius: 50%; background: #111417; border: 2px solid #3a4048; box-shadow: inset 0 2px 4px #000; transition: .2s; }
+  .jack .lab { font-family: var(--mono); font-size: 0.63rem; color: var(--mut); text-align: center; max-width: 6.5rem; transition: color .2s; }
+  .jack:hover .hole { border-color: var(--led); box-shadow: 0 0 12px rgba(240,160,32,0.6), inset 0 0 6px rgba(240,160,32,0.4); }
+  .jack:hover .lab { color: var(--alu); }
+
+  /* Signal routing / projects */
+  .route { display: grid; grid-template-columns: auto 1fr auto; gap: 1.5rem; align-items: baseline; padding: 1.6rem 0; border-bottom: 1px solid rgba(201,204,209,0.1); }
+  .route .port { font-family: var(--mono); font-size: 0.72rem; color: var(--cable); }
+  .route .nm { font-size: 1.3rem; font-weight: 600; color: var(--alu); text-decoration: none; transition: color .2s; }
+  .route .nm:hover { color: var(--led); }
+  .route .tag { font-family: var(--mono); font-size: 0.6rem; color: var(--led); border: 1px solid rgba(240,160,32,0.4); border-radius: 4px; padding: 0.12rem 0.45rem; margin-left: 0.7rem; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.06em; }
+  .route .ds { margin-top: 0.5rem; font-size: 0.92rem; color: #9aa1a9; max-width: 50ch; }
+  .route .tech { display: flex; flex-wrap: wrap; gap: 0.4rem 0.7rem; margin-top: 0.7rem; list-style: none; }
+  .route .tech li { font-family: var(--mono); font-size: 0.66rem; color: var(--faint); }
+  .route .links { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
+  .route .links a { font-family: var(--mono); font-size: 0.72rem; color: var(--mut); text-decoration: none; transition: color .2s; }
+  .route .links a:hover { color: var(--led); }
   .catalog-cta { display: flex; justify-content: center; margin-top: 3rem; }
   .catalog-btn {
     display: inline-flex; align-items: center; gap: 0.6rem;
-    background: var(--panel); border: 1px solid var(--line); color: var(--text);
+    background: var(--panel); border: 1px solid var(--line); color: var(--alu);
     padding: 0.85rem 1.8rem; border-radius: 6px;
     font-size: 0.74rem; font-weight: 600; text-decoration: none;
     transition: color .2s, border-color .2s, transform .15s;
   }
-  .catalog-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
-  .catalog-arrow { transition: transform 0.2s; }
+  .catalog-btn:hover { border-color: var(--led); color: var(--led); transform: translateY(-1px); }
+  .catalog-arrow { transition: transform .2s; }
   .catalog-btn:hover .catalog-arrow { transform: translateX(4px); }
 
   /* Experience */
-  .exp-row { display: grid; grid-template-columns: 11rem 1fr; gap: 2.6rem; padding: 2.2rem 0; border-top: 1px solid var(--line); }
-  .exp-row:last-child { border-bottom: 1px solid var(--line); }
-  .exp-date { font-size: 0.76rem; color: var(--faint); padding-top: 0.3rem; }
-  .exp-role { font-size: 1.15rem; font-weight: 700; }
-  .exp-company { font-size: 0.72rem; color: var(--accent); margin: 0.5rem 0 0.8rem; }
-  .exp-company::before { content: '@ '; }
-  .exp-desc { font-size: 0.8rem; font-weight: 300; line-height: 1.85; color: var(--muted); max-width: 40rem; }
+  .exp-row { display: grid; grid-template-columns: 12rem 1fr; gap: 2.4rem; padding: 1.8rem 0; border-top: 1px solid rgba(201,204,209,0.1); }
+  .exp-date { font-family: var(--mono); font-size: 0.76rem; color: var(--cable); padding-top: 0.2rem; }
+  .exp-role { font-size: 1.15rem; font-weight: 600; color: var(--alu); }
+  .exp-company { font-family: var(--mono); font-size: 0.72rem; color: var(--led); margin: 0.45rem 0 0.7rem; }
+  .exp-desc { font-size: 0.92rem; line-height: 1.8; color: #9aa1a9; max-width: 44rem; }
 
   /* Contact */
   .contact { text-align: center; }
-  .contact .sec-cmd { display: flex; justify-content: center; }
-  .contact-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.02em; }
-  .contact-sub { margin: 1.4rem auto 0; max-width: 30rem; font-size: 0.82rem; font-weight: 300; line-height: 1.9; color: var(--muted); }
-  .contact-email {
-    display: inline-block; margin-top: 2.6rem;
-    font-size: clamp(1.3rem, 3.4vw, 2rem); font-weight: 600; color: var(--accent);
-    text-decoration: none; border-bottom: 1px dashed rgba(232,174,75,0.4); padding-bottom: 4px;
-  }
+  .contact .sec-kicker { display: block; }
+  .contact-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; letter-spacing: -0.02em; }
+  .contact-sub { margin: 1.3rem auto 0; max-width: 32rem; font-size: 0.95rem; line-height: 1.8; color: #aeb4bb; }
+  .contact-email { display: inline-block; margin-top: 2.4rem; font-family: var(--mono); font-size: clamp(1.2rem, 3.2vw, 1.9rem); font-weight: 600; color: var(--led); text-decoration: none; border-bottom: 1px dashed rgba(240,160,32,0.45); padding-bottom: 4px; }
   .contact-email:hover { border-bottom-style: solid; }
-  .socials { display: flex; justify-content: center; gap: 1rem; margin-top: 3.2rem; flex-wrap: wrap; }
+  .socials { display: flex; justify-content: center; gap: 1rem; margin-top: 3rem; flex-wrap: wrap; }
   .socials a {
     display: inline-flex; align-items: center; gap: 0.55rem;
-    font-size: 0.74rem; color: var(--muted); text-decoration: none;
+    font-family: var(--mono); font-size: 0.74rem; color: var(--mut); text-decoration: none;
     border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem 1.2rem;
     transition: color .2s, border-color .2s;
   }
-  .socials a:hover { color: var(--accent); border-color: var(--accent); }
+  .socials a:hover { color: var(--led); border-color: var(--led); }
   .socials svg { width: 13px; height: 13px; }
 
   /* Footer */
   footer { border-top: 1px solid var(--line); }
-  .foot { display: flex; justify-content: space-between; align-items: center; padding: 1.8rem 0; font-size: 0.72rem; color: var(--faint); }
-  .foot span b { color: var(--accent); font-weight: 500; }
-  .foot .ok { color: var(--ok); }
+  .foot { display: flex; justify-content: space-between; align-items: center; padding: 1.8rem 0; font-family: var(--mono); font-size: 0.72rem; color: var(--faint); }
+  .foot .led { color: var(--led); }
 
   @media (max-width: 860px) {
-    nav { flex-direction: column; gap: 1rem; padding: 1.4rem 2rem; align-items: flex-start; }
     .wrap { padding: 0 1.5rem; }
-    .nav-links { gap: 1.2rem; }
-    .hero { padding: 4rem 0; }
-    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .project-row { grid-template-columns: 1fr; gap: 0.8rem; }
-    .p-links { flex-direction: row; align-items: center; }
+    nav { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.3rem 0; }
+    .nav-links { flex-wrap: wrap; gap: 1.2rem; }
+    .hero { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 0; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .mod { grid-template-columns: 1fr; gap: 1rem; }
+    .route { grid-template-columns: 1fr; gap: 0.7rem; }
+    .route .links { flex-direction: row; align-items: center; }
     .exp-row { grid-template-columns: 1fr; gap: 0.5rem; }
     .foot { flex-direction: column; gap: 0.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .ribbon .band, .ribbon .scan, .sig, .brand .led { animation: none; }
   }
 `;
 
@@ -257,10 +265,26 @@ const projects = [
 ];
 
 const skillGroups = [
-  { cat: "LANGUAGES", items: ["JavaScript (ES6+)", "TypeScript", "Python"] },
-  { cat: "FRONTEND", items: ["React 18/19", "Redux", "HTML5", "CSS3", "Tailwind CSS"] },
-  { cat: "BACKEND & DATA", items: ["Node.js / Express", "GraphQL / Apollo", "REST APIs", "MySQL", "MongoDB"] },
-  { cat: "TOOLING & WORKFLOW", items: ["Jest", "Vite", "Git / GitHub", "Figma", "AI-Assisted Tooling"] },
+  {
+    cat: "LANGUAGES",
+    items: ["JavaScript (ES6+)", "TypeScript", "Python", "SQL", "HTML5", "CSS3"],
+  },
+  {
+    cat: "FRONTEND",
+    items: ["React 18/19", "Redux", "Tailwind CSS", "TanStack Query", "Vite", "Handlebars", "jQuery", "Responsive Design", "Accessibility"],
+  },
+  {
+    cat: "BACKEND & DATA",
+    items: ["Node.js", "Express", "Fastify", "REST APIs", "GraphQL / Apollo", "PostgreSQL", "MySQL", "MongoDB", "IndexedDB", "Drizzle ORM", "Neon"],
+  },
+  {
+    cat: "TESTING & QUALITY",
+    items: ["Jest", "React Testing Library"],
+  },
+  {
+    cat: "TOOLS & WORKFLOW",
+    items: ["Git / GitHub", "GitHub Actions", "npm", "Figma", "Docker", "Render", "Salesforce", "AI-Assisted Tooling"],
+  },
 ];
 
 const experience = [
@@ -283,6 +307,8 @@ const experience = [
     desc: "450+ hour intensive program covering Full-Stack Development: JavaScript, React, jQuery, MySQL, APIs, Git, Node.js, Express, Jest, Handlebars, MongoDB, GraphQL, and Salesforce.",
   },
 ];
+
+const ribbonSkills = skillGroups.flatMap((group) => group.items);
 
 function useReveal() {
   useEffect(() => {
@@ -313,14 +339,12 @@ export default function Portfolio() {
       <div className="wrap">
         <nav>
           <a href="#top" className="brand">
-            <b>~</b>/john-yates <span className="hint">#</span>
+            <span className="led" /> JOHN YATES
           </a>
           <ul className="nav-links">
-            {["About", "Projects", "Experience", "Contact"].map((item) => (
+            {["About", "Skills", "Projects", "Experience", "Contact"].map((item) => (
               <li key={item}>
-                <a href={`#${item.toLowerCase()}`}>
-                  <span className="slash">/</span> {item.toLowerCase()}
-                </a>
+                <a href={`#${item.toLowerCase()}`}>{item.toLowerCase()}</a>
               </li>
             ))}
           </ul>
@@ -329,64 +353,91 @@ export default function Portfolio() {
         <main>
           {/* Hero */}
           <section id="top" className="hero">
-            <div className="cmd reveal">
-              <b>~</b> $ whoami
-            </div>
-            <h1 className="hero-title reveal">
-              john yates<span className="cursor" />
-            </h1>
-            <p className="hero-role reveal">
-              &nbsp;&nbsp;&nbsp;=&gt; <b>full-stack web developer</b>
-            </p>
-            <p className="hero-sub reveal">
-              I build fast, modern web applications from front to back —
-              clean interfaces, solid APIs, and everything in between.
-            </p>
-            <div className="hero-cta reveal">
-              <a href="#projects" className="btn">
-                ls projects <span>&#8595;</span>
-              </a>
-              <a href={RESUME_HREF} className="btn-ghost" download>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="cta-icon">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                download resume
-              </a>
-              <a href="#contact" className="btn-ghost">
-                get in touch
-              </a>
-            </div>
-            <div className="hero-meta reveal">
-              <div>
-                <span className="k">contact:</span> johndyates<span className="k">@</span>gmail.com
+            <div className="reveal">
+              <p className="kicker">{"// full-stack developer · Lafayette, LA"}</p>
+              <h1 className="hero-title">
+                Everything<br />
+                <em>connected.</em>
+              </h1>
+              <p className="hero-sub">
+                I'm John Yates. I build web apps where the pieces actually{" "}
+                <b>plug into each other</b> &mdash; a React surface, a clean API,
+                a database that behaves.
+              </p>
+              <div className="hero-cta">
+                <a href="#projects" className="btn">
+                  See the work
+                </a>
+                <a href={RESUME_HREF} className="btn-ghost" download>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="cta-icon">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Résumé
+                </a>
+                <a href="#contact" className="btn-ghost">
+                  Get in touch
+                </a>
               </div>
-              <div>
-                <span className="k">location:</span> lafayette, la &nbsp;
-                <span className="k">status:</span>{" "}
-                <span style={{ color: "var(--ok)" }}>available</span>
+              <div className="hero-meta">
+                <div>
+                  <span className="k">contact:</span> johndyates<span className="k">@</span>gmail.com
+                </div>
+                <div>
+                  <span className="k">location:</span> Lafayette, LA &nbsp;
+                  <span className="k">status:</span> <span className="ok">available</span>
+                </div>
               </div>
+            </div>
+
+            <div className="panel reveal">
+              <span className="screw tl" />
+              <span className="screw tr" />
+              <span className="screw bl" />
+              <span className="screw br" />
+              <svg viewBox="0 0 320 220" role="img" aria-label="signal path from frontend to database">
+                <path className="cablepath" d="M14,40 C90,40 80,180 160,180 S250,40 306,40" />
+                <path className="sig" d="M14,40 C90,40 80,180 160,180 S250,40 306,40" />
+                <circle cx="14" cy="40" r="6" fill="#2b2f35" stroke="#e0452f" strokeWidth="3" />
+                <circle cx="306" cy="40" r="6" fill="#2b2f35" stroke="#e0452f" strokeWidth="3" />
+                <circle cx="160" cy="180" r="6" fill="#2b2f35" stroke="#f0a020" strokeWidth="3" />
+              </svg>
+              <span className="plabel">SIGNAL PATH &middot; REV {RESUME_VERSION}</span>
             </div>
           </section>
+        </main>
+      </div>
 
-          {/* About */}
+      {/* Signal ribbon */}
+      <div className="ribbon" aria-hidden="true">
+        <div className="band">
+          {[...ribbonSkills, ...ribbonSkills].map((skill, i) => (
+            <span key={`${skill}-${i}`} className={"sigitem" + (i % 3 === 0 ? " on" : "")}>
+              {skill}
+            </span>
+          ))}
+        </div>
+        <span className="scan" />
+      </div>
+
+      <div className="wrap">
+        <main>
+          {/* About + Skills */}
           <section id="about">
-            <div className="sec-cmd reveal">
-              <b>~</b> $ cat about.txt
-            </div>
+            <p className="sec-kicker reveal">{"// about"}</p>
             <h2 className="sec-title reveal">who_i_am</h2>
             <div className="about-grid">
               <div className="about-text reveal">
                 <p>
-                  I'm a <strong>full-stack web developer</strong> based in the US, currently
-                  building web solutions at <strong>KUKUI</strong> for automotive service
-                  businesses. I love turning complex problems into clean, intuitive digital
-                  experiences.
+                  I'm a <strong>full-stack web developer</strong> based in Lafayette, LA,
+                  currently building web solutions at <strong>KUKUI</strong> for automotive
+                  service businesses. I love turning complex problems into clean, intuitive
+                  digital experiences.
                 </p>
                 <p>
                   My background spans the entire stack — from responsive React frontends to
-                  Node/Express APIs backed by MySQL and MongoDB. I care deeply about{" "}
+                  Node/Express APIs backed by PostgreSQL and MongoDB. I care deeply about{" "}
                   <strong>code quality, performance,</strong> and shipping things that actually
                   work.
                 </p>
@@ -396,15 +447,19 @@ export default function Portfolio() {
                   the dev world.
                 </p>
               </div>
-              <div className="skills reveal">
+              <div className="skills reveal" id="skills">
                 {skillGroups.map((group) => (
-                  <div className="skill-group" key={group.cat}>
-                    <div className="skill-cat">{group.cat}</div>
-                    <div className="chips">
+                  <div className="mod" key={group.cat}>
+                    <div className="name">
+                      MODULE {String(skillGroups.indexOf(group) + 1).padStart(2, "0")}
+                      <big>{group.cat}</big>
+                    </div>
+                    <div className="jacks">
                       {group.items.map((item) => (
-                        <span className="chip" key={item}>
-                          {item}
-                        </span>
+                        <div className="jack" key={item} title={item}>
+                          <span className="hole" />
+                          <span className="lab">{item}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -415,34 +470,25 @@ export default function Portfolio() {
 
           {/* Projects */}
           <section id="projects">
-            <div className="sec-cmd reveal">
-              <b>~</b> $ ls projects/
-            </div>
+            <p className="sec-kicker reveal">{"// signal routing"}</p>
             <h2 className="sec-title reveal">selected_projects</h2>
 
             {projects.map((p) => (
-              <div className="project-row reveal" key={p.title}>
-                <div className="p-num">{p.num}</div>
+              <div className="route reveal" key={p.title}>
+                <span className="port">OUT {p.num}</span>
                 <div>
-                  <div className="p-title-row">
-                    <a
-                      href={p.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-title-link"
-                    >
-                      <h3 className="p-title">{p.title}</h3>
-                    </a>
-                    <span className="p-tag">{p.tag}</span>
-                  </div>
-                  <p className="p-desc">{p.desc}</p>
-                  <ul className="p-tech">
+                  <a href={p.live} target="_blank" rel="noopener noreferrer" className="nm">
+                    {p.title}
+                  </a>
+                  <span className="tag">{p.tag}</span>
+                  <p className="ds">{p.desc}</p>
+                  <ul className="tech">
                     {p.tech.map((t) => (
                       <li key={t}>{t}</li>
                     ))}
                   </ul>
                 </div>
-                <div className="p-links">
+                <div className="links">
                   <a href={p.live} target="_blank" rel="noopener noreferrer">
                     open &#8599;
                   </a>
@@ -467,9 +513,7 @@ export default function Portfolio() {
 
           {/* Experience */}
           <section id="experience">
-            <div className="sec-cmd reveal">
-              <b>~</b> $ cat experience.log
-            </div>
+            <p className="sec-kicker reveal">{"// maintenance log"}</p>
             <h2 className="sec-title reveal">experience</h2>
 
             {experience.map((exp) => (
@@ -486,13 +530,11 @@ export default function Portfolio() {
 
           {/* Contact */}
           <section id="contact" className="contact">
-            <div className="sec-cmd reveal">
-              <b>~</b> $ mail --to johndyates
-            </div>
-            <h2 className="contact-title reveal">let's work together</h2>
+            <p className="sec-kicker reveal">{"// open channel"}</p>
+            <h2 className="contact-title reveal">Let's connect.</h2>
             <p className="contact-sub reveal">
               Open to new opportunities, collaborations, and interesting projects.
-              Drop me a line — I always respond.
+              Drop me a line &mdash; I always respond.
             </p>
             <a href="mailto:johndyates@gmail.com" className="contact-email reveal">
               johndyates@gmail.com
@@ -504,7 +546,7 @@ export default function Portfolio() {
                   <polyline points="7 10 12 15 17 10" />
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
-                resume
+                résumé
               </a>
               <a href="https://github.com/cycoconutz" target="_blank" rel="noopener noreferrer">
                 <svg viewBox="0 0 24 24" fill="currentColor">
@@ -518,7 +560,7 @@ export default function Portfolio() {
                 </svg>
                 linkedin
               </a>
-              <a href="https://github.com/cycoconutz/React-Portfolio" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/cycoconutz/new-portfolio" target="_blank" rel="noopener noreferrer">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
@@ -531,11 +573,9 @@ export default function Portfolio() {
 
         <footer>
           <div className="foot">
+            <span>© 2026 JOHN YATES</span>
             <span>
-              © 2026 <b>john</b>-yates
-            </span>
-            <span>
-              <span className="ok">●</span> exit 0 &nbsp;·&nbsp; built with react
+              <span className="led">●</span> SIGNAL OK &nbsp;·&nbsp; BUILT WITH REACT
             </span>
           </div>
         </footer>
