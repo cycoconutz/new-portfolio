@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // RESUME_VERSION is rewritten automatically by the resume-generator on every
 // new resume. The ?v= query busts the CDN/browser cache so recruiters always
 // get the current file even though the path stays stable.
-const RESUME_VERSION = "1.3.6";
+const RESUME_VERSION = "1.4.0";
 const RESUME_HREF = `${process.env.PUBLIC_URL || ""}/resume.pdf?v=${RESUME_VERSION}`;
 
 const styles = `
@@ -14,8 +14,8 @@ const styles = `
     --panel: #2b2f35;
     --pane: #1a1d21;
     --alu: #c9ccd1;
-    --mut: #7d848d;
-    --faint: #5b626b;
+    --mut: #9aa1a9;
+    --faint: #8f96a0;
     --teal: #1c4e46;
     --led: #f0a020;
     --cable: #e0452f;
@@ -25,6 +25,7 @@ const styles = `
   }
 
   html { scroll-behavior: smooth; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--led); outline-offset: 3px; }
 
   body {
     font-family: var(--grot);
@@ -271,7 +272,7 @@ const skillGroups = [
   },
   {
     cat: "FRONTEND",
-    items: ["React 18/19", "Redux", "Tailwind CSS", "TanStack Query", "Vite", "Handlebars", "jQuery", "Responsive Design", "Accessibility"],
+    items: ["React", "Redux", "Tailwind CSS", "TanStack Query", "Vite", "Responsive Design", "Accessibility"],
   },
   {
     cat: "BACKEND & DATA",
@@ -279,18 +280,18 @@ const skillGroups = [
   },
   {
     cat: "TESTING & QUALITY",
-    items: ["Jest", "React Testing Library"],
+    items: ["Jest", "Vitest", "React Testing Library", "Playwright"],
   },
   {
     cat: "TOOLS & WORKFLOW",
-    items: ["Git / GitHub", "GitHub Actions", "npm", "Figma", "Docker", "Render", "Salesforce", "AI-Assisted Tooling"],
+    items: ["Git / GitHub", "GitHub Actions", "Figma", "Docker", "AWS", "Datadog", "Render", "AI-Assisted Tooling"],
   },
 ];
 
 const experience = [
   {
     date: "2022 — present",
-    role: "Web Developer",
+    role: "Full-Stack Web Developer",
     company: "KUKUI",
     desc: "Building and maintaining web solutions for automotive service businesses. Integrating point-of-sale platforms, inventory systems, and employee scheduling tools while ensuring performance and reliability across client deployments.",
   },
@@ -308,7 +309,7 @@ const experience = [
   },
 ];
 
-const ribbonSkills = skillGroups.flatMap((group) => group.items);
+const ribbonSkills = ["TypeScript", "React", "Node.js", "GraphQL", "PostgreSQL", "AWS", "Docker", "Jest", "Tailwind CSS", "TanStack Query"];
 
 function useReveal() {
   useEffect(() => {
@@ -354,7 +355,7 @@ export default function Portfolio() {
           {/* Hero */}
           <section id="top" className="hero">
             <div className="reveal">
-              <p className="kicker">{"// full-stack developer · Lafayette, LA"}</p>
+              <p className="kicker">{"// full-stack engineer · Lafayette, LA"}</p>
               <h1 className="hero-title">
                 Everything<br />
                 <em>connected.</em>
@@ -430,7 +431,7 @@ export default function Portfolio() {
             <div className="about-grid">
               <div className="about-text reveal">
                 <p>
-                  I'm a <strong>full-stack web developer</strong> based in Lafayette, LA,
+                  I'm a <strong>full-stack engineer</strong> based in Lafayette, LA,
                   currently building web solutions at <strong>KUKUI</strong> for automotive
                   service businesses. I love turning complex problems into clean, intuitive
                   digital experiences.
