@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // RESUME_VERSION is rewritten automatically by the resume-generator on every
 // new resume. The ?v= query busts the CDN/browser cache so recruiters always
 // get the current file even though the path stays stable.
-const RESUME_VERSION = "1.4.0";
+const RESUME_VERSION = "1.4.1";
 const RESUME_HREF = `${process.env.PUBLIC_URL || ""}/resume.pdf?v=${RESUME_VERSION}`;
 
 const styles = `
@@ -211,6 +211,15 @@ const styles = `
 const projects = [
   {
     num: "01",
+    title: "IronLog",
+    tag: "latest",
+    desc: "A full-stack strength-training log — record sessions set by set, then see weekly volume, muscle-group splits, streaks, and estimated-1RM personal records. A Spring Boot API and a React SPA ship as a single Docker image over PostgreSQL.",
+    tech: ["Java 21", "Spring Boot", "Spring Security", "JPA", "PostgreSQL", "React", "TypeScript", "Vite", "Docker"],
+    live: "https://ironlog-llgm.onrender.com/",
+    repo: "https://github.com/cycoconutz/ironlog",
+  },
+  {
+    num: "02",
     title: "Lulla",
     tag: "featured",
     desc: "A calm, local-first baby & parent tracker — one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
@@ -219,16 +228,16 @@ const projects = [
     repo: "https://github.com/cycoconutz/lulla",
   },
   {
-    num: "02",
+    num: "03",
     title: "Deadwax",
-    tag: "latest",
+    tag: "project",
     desc: "A full-stack vinyl marketplace with full-text catalog search, cart and transactional checkout, seller fulfillment dashboards, verified reviews, and an admin moderation back office.",
     tech: ["TypeScript", "React", "Fastify", "PostgreSQL", "Drizzle ORM"],
     live: "https://deadwax-exee.onrender.com/",
     repo: "https://github.com/cycoconutz/deadwax",
   },
   {
-    num: "03",
+    num: "04",
     title: "VAULT",
     tag: "project",
     desc: "A brutalist explorer for the Art Institute of Chicago — search, filter, and pin 65,000+ artworks straight from the museum's open-access API, with debounced, URL-synced search.",
@@ -237,7 +246,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/vault",
   },
   {
-    num: "04",
+    num: "05",
     title: "Karmatic",
     tag: "project",
     desc: "A MERN-stack single-page app built as a three-person collaborative bootcamp capstone with authentication and live data.",
@@ -246,7 +255,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/Karmatic",
   },
   {
-    num: "05",
+    num: "06",
     title: "TwilightVotes",
     tag: "featured",
     desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
@@ -255,7 +264,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/Twilight-Votes",
   },
   {
-    num: "06",
+    num: "07",
     title: "Ledger",
     tag: "project",
     desc: "A zero-backend revenue & receipt tracker: import CSV sales exports (like a Depop report), review revenue in a filterable table, and log expenses with categories, labels, and receipt photos — all stored on-device with IndexedDB.",
@@ -268,7 +277,7 @@ const projects = [
 const skillGroups = [
   {
     cat: "LANGUAGES",
-    items: ["JavaScript (ES6+)", "TypeScript", "Python", "SQL", "HTML5", "CSS3"],
+    items: ["JavaScript (ES6+)", "TypeScript", "Java", "Python", "SQL", "HTML5", "CSS3"],
   },
   {
     cat: "FRONTEND",
@@ -276,24 +285,24 @@ const skillGroups = [
   },
   {
     cat: "BACKEND & DATA",
-    items: ["Node.js", "Express", "Fastify", "REST APIs", "GraphQL / Apollo", "PostgreSQL", "MySQL", "MongoDB", "IndexedDB", "Drizzle ORM", "Neon"],
+    items: ["Node.js", "Express", "Fastify", "REST APIs", "GraphQL / Apollo", "Spring Boot", "Spring Security", "JPA / Hibernate", "PostgreSQL", "MySQL", "MongoDB", "IndexedDB", "Drizzle ORM", "Neon"],
   },
   {
     cat: "TESTING & QUALITY",
-    items: ["Jest", "Vitest", "React Testing Library", "Playwright"],
+    items: ["Jest", "Vitest", "React Testing Library", "Playwright", "JUnit"],
   },
   {
     cat: "TOOLS & WORKFLOW",
-    items: ["Git / GitHub", "GitHub Actions", "Figma", "Docker", "AWS", "Datadog", "Render", "AI-Assisted Tooling"],
+    items: ["Git / GitHub", "GitHub Actions", "Maven", "Figma", "Docker", "AWS", "Datadog", "Render", "AI-Assisted Tooling"],
   },
 ];
 
 const experience = [
   {
-    date: "2022 — present",
+    date: "Sep 2022 - Sep 2026",
     role: "Full-Stack Web Developer",
     company: "KUKUI",
-    desc: "Building and maintaining web solutions for automotive service businesses. Integrating point-of-sale platforms, inventory systems, and employee scheduling tools while ensuring performance and reliability across client deployments.",
+    desc: "Built and maintained web solutions for automotive service businesses. Integrated point-of-sale platforms, inventory systems, and employee scheduling tools while ensuring performance and reliability across client deployments.",
   },
   {
     date: "2021 — 2022",
@@ -431,10 +440,10 @@ export default function Portfolio() {
             <div className="about-grid">
               <div className="about-text reveal">
                 <p>
-                  I'm a <strong>full-stack engineer</strong> based in Lafayette, LA,
-                  currently building web solutions at <strong>KUKUI</strong> for automotive
-                  service businesses. I love turning complex problems into clean, intuitive
-                  digital experiences.
+                  I'm a <strong>full-stack engineer</strong> based in Lafayette, LA.
+                  I spent the last four years building web solutions at{" "}
+                  <strong>KUKUI</strong> for automotive service businesses, and I love
+                  turning complex problems into clean, intuitive digital experiences.
                 </p>
                 <p>
                   My background spans the entire stack — from responsive React frontends to
