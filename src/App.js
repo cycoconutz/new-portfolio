@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // RESUME_VERSION is rewritten automatically by the resume-generator on every
 // new resume. The ?v= query busts the CDN/browser cache so recruiters always
 // get the current file even though the path stays stable.
-const RESUME_VERSION = "1.4.2";
+const RESUME_VERSION = "1.4.3";
 const RESUME_HREF = `${process.env.PUBLIC_URL || ""}/resume.pdf?v=${RESUME_VERSION}`;
 
 const styles = `
