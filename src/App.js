@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // RESUME_VERSION is rewritten automatically by the resume-generator on every
 // new resume. The ?v= query busts the CDN/browser cache so recruiters always
 // get the current file even though the path stays stable.
-const RESUME_VERSION = "1.4.1";
+const RESUME_VERSION = "1.4.2";
 const RESUME_HREF = `${process.env.PUBLIC_URL || ""}/resume.pdf?v=${RESUME_VERSION}`;
 
 const styles = `
@@ -211,15 +211,24 @@ const styles = `
 const projects = [
   {
     num: "01",
-    title: "IronLog",
+    title: "Checklist",
     tag: "latest",
+    desc: "A shared-checklist PWA with no accounts: make a list, send the invite link, and everyone edits together with drag-and-drop ordering, priorities, assignment, and Web Push notifications. A Next.js 16 App Router app over Drizzle and Neon serverless Postgres.",
+    tech: ["Next.js 16", "React 19", "TypeScript", "Drizzle ORM", "Neon", "Web Push", "Tailwind CSS"],
+    live: "https://checklist-cyco.vercel.app/",
+    repo: "https://github.com/cycoconutz/checklist",
+  },
+  {
+    num: "02",
+    title: "IronLog",
+    tag: "project",
     desc: "A full-stack strength-training log — record sessions set by set, then see weekly volume, muscle-group splits, streaks, and estimated-1RM personal records. A Spring Boot API and a React SPA ship as a single Docker image over PostgreSQL.",
     tech: ["Java 21", "Spring Boot", "Spring Security", "JPA", "PostgreSQL", "React", "TypeScript", "Vite", "Docker"],
     live: "https://ironlog-llgm.onrender.com/",
     repo: "https://github.com/cycoconutz/ironlog",
   },
   {
-    num: "02",
+    num: "03",
     title: "Lulla",
     tag: "featured",
     desc: "A calm, local-first baby & parent tracker — one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
@@ -228,7 +237,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/lulla",
   },
   {
-    num: "03",
+    num: "04",
     title: "Deadwax",
     tag: "project",
     desc: "A full-stack vinyl marketplace with full-text catalog search, cart and transactional checkout, seller fulfillment dashboards, verified reviews, and an admin moderation back office.",
@@ -237,7 +246,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/deadwax",
   },
   {
-    num: "04",
+    num: "05",
     title: "VAULT",
     tag: "project",
     desc: "A brutalist explorer for the Art Institute of Chicago — search, filter, and pin 65,000+ artworks straight from the museum's open-access API, with debounced, URL-synced search.",
@@ -246,7 +255,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/vault",
   },
   {
-    num: "05",
+    num: "06",
     title: "Karmatic",
     tag: "project",
     desc: "A MERN-stack single-page app built as a three-person collaborative bootcamp capstone with authentication and live data.",
@@ -255,7 +264,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/Karmatic",
   },
   {
-    num: "06",
+    num: "07",
     title: "TwilightVotes",
     tag: "featured",
     desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
@@ -264,7 +273,7 @@ const projects = [
     repo: "https://github.com/cycoconutz/Twilight-Votes",
   },
   {
-    num: "07",
+    num: "08",
     title: "Ledger",
     tag: "project",
     desc: "A zero-backend revenue & receipt tracker: import CSV sales exports (like a Depop report), review revenue in a filterable table, and log expenses with categories, labels, and receipt photos — all stored on-device with IndexedDB.",
