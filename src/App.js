@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // RESUME_VERSION is rewritten automatically by the resume-generator on every
 // new resume. The ?v= query busts the CDN/browser cache so recruiters always
 // get the current file even though the path stays stable.
-const RESUME_VERSION = "1.4.3";
+const RESUME_VERSION = "1.4.4";
 const RESUME_HREF = `${process.env.PUBLIC_URL || ""}/resume.pdf?v=${RESUME_VERSION}`;
 
 const styles = `
@@ -19,6 +19,7 @@ const styles = `
     --teal: #1c4e46;
     --led: #f0a020;
     --cable: #e0452f;
+    --cableText: #ff8a77;
     --line: rgba(201, 204, 209, 0.14);
     --grot: 'Schibsted Grotesk', system-ui, sans-serif;
     --mono: 'JetBrains Mono', ui-monospace, monospace;
@@ -54,7 +55,7 @@ const styles = `
   .brand .led { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--led); box-shadow: 0 0 10px var(--led); animation: pulse 2.6s ease-in-out infinite; }
   @keyframes pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
   .nav-links { display: flex; gap: 1.7rem; list-style: none; }
-  .nav-links a { color: var(--mut); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: color .2s; }
+  .nav-links a { color: var(--mut); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: color .2s; padding: 0.45rem 0; }
   .nav-links a:hover { color: var(--led); }
 
   /* Hero */
@@ -100,7 +101,6 @@ const styles = `
   .cablepath { fill: none; stroke: var(--cable); stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 6px rgba(224,69,47,0.5)); }
   .sig { fill: none; stroke: #ffd9a0; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 16 240; animation: travel 3.4s linear infinite; }
   @keyframes travel { to { stroke-dashoffset: -256; } }
-  .panel .plabel { position: absolute; bottom: 0.7rem; right: 1rem; font-family: var(--mono); font-size: 0.6rem; color: var(--faint); letter-spacing: 0.08em; }
 
   /* Signal ribbon */
   .ribbon { position: relative; background: var(--pane); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
@@ -115,7 +115,6 @@ const styles = `
 
   /* Sections */
   section { padding: 5rem 0; border-top: 1px solid var(--line); }
-  .sec-kicker { font-family: var(--mono); font-size: 0.74rem; color: var(--led); margin-bottom: 1rem; }
   .sec-title { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -0.01em; margin-bottom: 2.6rem; }
 
   /* About */
@@ -138,7 +137,7 @@ const styles = `
 
   /* Signal routing / projects */
   .route { display: grid; grid-template-columns: auto 1fr auto; gap: 1.5rem; align-items: baseline; padding: 1.6rem 0; border-bottom: 1px solid rgba(201,204,209,0.1); }
-  .route .port { font-family: var(--mono); font-size: 0.72rem; color: var(--cable); }
+  .route .port { font-family: var(--mono); font-size: 0.72rem; color: var(--cableText); }
   .route .nm { font-size: 1.3rem; font-weight: 600; color: var(--alu); text-decoration: none; transition: color .2s; }
   .route .nm:hover { color: var(--led); }
   .route .tag { font-family: var(--mono); font-size: 0.6rem; color: var(--led); border: 1px solid rgba(240,160,32,0.4); border-radius: 4px; padding: 0.12rem 0.45rem; margin-left: 0.7rem; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -162,14 +161,18 @@ const styles = `
 
   /* Experience */
   .exp-row { display: grid; grid-template-columns: 12rem 1fr; gap: 2.4rem; padding: 1.8rem 0; border-top: 1px solid rgba(201,204,209,0.1); }
-  .exp-date { font-family: var(--mono); font-size: 0.76rem; color: var(--cable); padding-top: 0.2rem; }
+  .exp-date { font-family: var(--mono); font-size: 0.76rem; color: var(--cableText); padding-top: 0.2rem; }
+  .exp-loc { display: block; color: var(--mut); margin-top: 0.3rem; }
   .exp-role { font-size: 1.15rem; font-weight: 600; color: var(--alu); }
   .exp-company { font-family: var(--mono); font-size: 0.72rem; color: var(--led); margin: 0.45rem 0 0.7rem; }
   .exp-desc { font-size: 0.92rem; line-height: 1.8; color: #9aa1a9; max-width: 44rem; }
+  .exp-list { margin: 0.6rem 0 0; padding-left: 1.15rem; max-width: 44rem; }
+  .exp-list li { font-size: 0.92rem; line-height: 1.75; color: #9aa1a9; margin-bottom: 0.4rem; }
+  .exp-list li::marker { color: var(--led); }
+  .route h3 { margin: 0; font-size: 1.3rem; font-weight: 600; }
 
   /* Contact */
   .contact { text-align: center; }
-  .contact .sec-kicker { display: block; }
   .contact-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; letter-spacing: -0.02em; }
   .contact-sub { margin: 1.3rem auto 0; max-width: 32rem; font-size: 0.95rem; line-height: 1.8; color: #aeb4bb; }
   .contact-email { display: inline-block; margin-top: 2.4rem; font-family: var(--mono); font-size: clamp(1.2rem, 3.2vw, 1.9rem); font-weight: 600; color: var(--led); text-decoration: none; border-bottom: 1px dashed rgba(240,160,32,0.45); padding-bottom: 4px; }
@@ -187,7 +190,6 @@ const styles = `
   /* Footer */
   footer { border-top: 1px solid var(--line); }
   .foot { display: flex; justify-content: space-between; align-items: center; padding: 1.8rem 0; font-family: var(--mono); font-size: 0.72rem; color: var(--faint); }
-  .foot .led { color: var(--led); }
 
   @media (max-width: 860px) {
     .wrap { padding: 0 1.5rem; }
@@ -211,9 +213,9 @@ const styles = `
 const projects = [
   {
     num: "01",
-    title: "Checklist",
+    title: "LinkedList",
     tag: "latest",
-    desc: "A shared-checklist PWA with no accounts: make a list, send the invite link, and everyone edits together with drag-and-drop ordering, priorities, assignment, and Web Push notifications. A Next.js 16 App Router app over Drizzle and Neon serverless Postgres.",
+    desc: "A shared-checklist PWA with no accounts, built around its invite links: make a list, send the link, and everyone edits together with drag-and-drop ordering, priorities, assignment, and Web Push notifications. A Next.js 16 App Router app over Drizzle and Neon serverless Postgres.",
     tech: ["Next.js 16", "React 19", "TypeScript", "Drizzle ORM", "Neon", "Web Push", "Tailwind CSS"],
     live: "https://checklist-cyco.vercel.app/",
     repo: "https://github.com/cycoconutz/checklist",
@@ -231,7 +233,7 @@ const projects = [
     num: "03",
     title: "Lulla",
     tag: "featured",
-    desc: "A calm, local-first baby & parent tracker — one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
+    desc: "A calm, local-first baby & parent tracker: one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
     tech: ["TypeScript", "React", "Vite", "PWA", "Neon"],
     live: "https://lulla.dev/landing/",
     repo: "https://github.com/cycoconutz/lulla",
@@ -240,7 +242,7 @@ const projects = [
     num: "04",
     title: "IronLog",
     tag: "project",
-    desc: "A full-stack strength-training log — record sessions set by set, then see weekly volume, muscle-group splits, streaks, and estimated-1RM personal records. A Spring Boot API and a React SPA ship as a single Docker image over PostgreSQL.",
+    desc: "A full-stack strength-training log: record sessions set by set, then see weekly volume, muscle-group splits, streaks, and estimated-1RM personal records. A Spring Boot API and a React SPA ship as a single Docker image over PostgreSQL.",
     tech: ["Java 21", "Spring Boot", "Spring Security", "JPA", "PostgreSQL", "React", "TypeScript", "Vite", "Docker"],
     live: "https://ironlog-llgm.onrender.com/",
     repo: "https://github.com/cycoconutz/ironlog",
@@ -259,44 +261,48 @@ const projects = [
 const skillGroups = [
   {
     cat: "LANGUAGES",
-    items: ["JavaScript (ES6+)", "TypeScript", "Java", "Python", "SQL", "HTML5", "CSS3"],
+    items: ["TypeScript", "Python", "SQL"],
   },
   {
     cat: "FRONTEND",
-    items: ["React", "Redux", "Tailwind CSS", "TanStack Query", "Vite", "Responsive Design", "Accessibility"],
+    items: ["React", "Vite", "IndexedDB", "WCAG 2.1 AA"],
   },
   {
-    cat: "BACKEND & DATA",
-    items: ["Node.js", "Express", "Fastify", "REST APIs", "GraphQL / Apollo", "Spring Boot", "Spring Security", "JPA / Hibernate", "PostgreSQL", "MySQL", "MongoDB", "IndexedDB", "Drizzle ORM", "Neon"],
+    cat: "BACKEND",
+    items: ["Node.js", "API design", "GraphQL", "Postgres"],
   },
   {
-    cat: "TESTING & QUALITY",
-    items: ["Jest", "Vitest", "React Testing Library", "Playwright", "JUnit"],
-  },
-  {
-    cat: "TOOLS & WORKFLOW",
-    items: ["Git / GitHub", "GitHub Actions", "Maven", "Figma", "Docker", "AWS", "Datadog", "Render", "AI-Assisted Tooling"],
+    cat: "QUALITY & OPS",
+    items: ["Jest", "Playwright", "Git", "Figma", "Docker", "AWS", "Datadog"],
   },
 ];
 
 const experience = [
   {
     date: "Sep 2022 - Sep 2026",
+    location: "Remote",
     role: "Full-Stack Web Developer",
     company: "KUKUI",
-    desc: "Built and maintained web solutions for automotive service businesses. Integrated point-of-sale platforms, inventory systems, and employee scheduling tools while ensuring performance and reliability across client deployments.",
+    bullets: [
+      "Owned features end to end for software used by thousands of people daily, from Figma to production.",
+      "Shipped 10 POS integrations including Tekmetric, plus React UIs for inventory and scheduling.",
+      "Built 200 customer sites a year on an in-house CMS and raised Lighthouse scores 10 to 15 points.",
+      "Shipped Node and Express APIs over MySQL and MongoDB on AWS; migrated REST to GraphQL with Apollo.",
+      "Reviewed code on a 32-person team, and wrote the onboarding and training docs new hires use.",
+      "Wrote Jest tests, monitored production in Datadog, and traced bugs to root cause rather than symptoms.",
+    ],
   },
   {
-    date: "2021 — 2022",
+    date: "2021 - 2022",
     role: "Teaching Assistant",
-    company: "Coding Bootcamp",
-    desc: "Guided students through Full-Stack Development fundamentals — JavaScript, React, Node.js, MySQL, and more. Resolved technical issues, reported deprecated curriculum, and helped students build autonomy and passion for front-end development.",
+    company: "2U",
+    desc: "Guided students through full-stack development fundamentals: JavaScript, React, Node.js, MySQL, and more. Resolved technical issues, reported deprecated curriculum, and helped students build autonomy in front-end development.",
   },
   {
-    date: "2020 — 2021",
+    date: "2022",
     role: "Software Dev Immersive",
-    company: "Coding Bootcamp Graduate",
-    desc: "450+ hour intensive program covering Full-Stack Development: JavaScript, React, jQuery, MySQL, APIs, Git, Node.js, Express, Jest, Handlebars, MongoDB, GraphQL, and Salesforce.",
+    company: "University of Texas at Austin",
+    desc: "450+ hour intensive program covering full-stack development: JavaScript, React, jQuery, MySQL, APIs, Git, Node.js, Express, Jest, Handlebars, MongoDB, GraphQL, and Salesforce.",
   },
 ];
 
@@ -334,7 +340,7 @@ export default function Portfolio() {
             <span className="led" /> JOHN YATES
           </a>
           <ul className="nav-links">
-            {["About", "Skills", "Projects", "Experience", "Contact"].map((item) => (
+            {["About", "Skills", "Experience", "Projects", "Contact"].map((item) => (
               <li key={item}>
                 <a href={`#${item.toLowerCase()}`}>{item.toLowerCase()}</a>
               </li>
@@ -353,7 +359,7 @@ export default function Portfolio() {
               </h1>
               <p className="hero-sub">
                 I'm John Yates. I build web apps where the pieces actually{" "}
-                <b>plug into each other</b> &mdash; a React surface, a clean API,
+                <b>plug into each other</b>: a React surface, a clean API,
                 a database that behaves.
               </p>
               <div className="hero-cta">
@@ -395,7 +401,6 @@ export default function Portfolio() {
                 <circle cx="306" cy="40" r="6" fill="#2b2f35" stroke="#e0452f" strokeWidth="3" />
                 <circle cx="160" cy="180" r="6" fill="#2b2f35" stroke="#f0a020" strokeWidth="3" />
               </svg>
-              <span className="plabel">SIGNAL PATH &middot; REV {RESUME_VERSION}</span>
             </div>
           </section>
         </main>
@@ -417,7 +422,6 @@ export default function Portfolio() {
         <main>
           {/* About + Skills */}
           <section id="about">
-            <p className="sec-kicker reveal">{"// about"}</p>
             <h2 className="sec-title reveal">who_i_am</h2>
             <div className="about-grid">
               <div className="about-text reveal">
@@ -428,7 +432,7 @@ export default function Portfolio() {
                   turning complex problems into clean, intuitive digital experiences.
                 </p>
                 <p>
-                  My background spans the entire stack — from responsive React frontends to
+                  My background spans the entire stack, from responsive React frontends to
                   Node/Express APIs backed by PostgreSQL and MongoDB. I care deeply about{" "}
                   <strong>code quality, performance,</strong> and shipping things that actually
                   work.
@@ -460,18 +464,45 @@ export default function Portfolio() {
             </div>
           </section>
 
+          {/* Experience */}
+          <section id="experience">
+            <h2 className="sec-title reveal">experience</h2>
+
+            {experience.map((exp) => (
+              <div className="exp-row reveal" key={exp.role}>
+                <div className="exp-date">
+                  {exp.date}
+                  {exp.location ? <span className="exp-loc">{exp.location}</span> : null}
+                </div>
+                <div>
+                  <h3 className="exp-role">{exp.role}</h3>
+                  <div className="exp-company">{exp.company}</div>
+                  {exp.desc ? <p className="exp-desc">{exp.desc}</p> : null}
+                  {exp.bullets ? (
+                    <ul className="exp-list">
+                      {exp.bullets.map((b) => (
+                        <li key={b}>{b}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </section>
+
           {/* Projects */}
           <section id="projects">
-            <p className="sec-kicker reveal">{"// signal routing"}</p>
             <h2 className="sec-title reveal">selected_projects</h2>
 
             {projects.map((p) => (
               <div className="route reveal" key={p.title}>
                 <span className="port">OUT {p.num}</span>
                 <div>
-                  <a href={p.live} target="_blank" rel="noopener noreferrer" className="nm">
-                    {p.title}
-                  </a>
+                  <h3>
+                    <a href={p.live} target="_blank" rel="noopener noreferrer" className="nm">
+                      {p.title}
+                    </a>
+                  </h3>
                   <span className="tag">{p.tag}</span>
                   <p className="ds">{p.desc}</p>
                   <ul className="tech">
@@ -503,30 +534,12 @@ export default function Portfolio() {
             </div>
           </section>
 
-          {/* Experience */}
-          <section id="experience">
-            <p className="sec-kicker reveal">{"// maintenance log"}</p>
-            <h2 className="sec-title reveal">experience</h2>
-
-            {experience.map((exp) => (
-              <div className="exp-row reveal" key={exp.role}>
-                <div className="exp-date">{exp.date}</div>
-                <div>
-                  <div className="exp-role">{exp.role}</div>
-                  <div className="exp-company">{exp.company}</div>
-                  <p className="exp-desc">{exp.desc}</p>
-                </div>
-              </div>
-            ))}
-          </section>
-
           {/* Contact */}
           <section id="contact" className="contact">
-            <p className="sec-kicker reveal">{"// open channel"}</p>
             <h2 className="contact-title reveal">Let's connect.</h2>
             <p className="contact-sub reveal">
               Open to new opportunities, collaborations, and interesting projects.
-              Drop me a line &mdash; I always respond.
+              Drop me a line: I always respond.
             </p>
             <a href="mailto:johndyates@gmail.com" className="contact-email reveal">
               johndyates@gmail.com
@@ -566,9 +579,6 @@ export default function Portfolio() {
         <footer>
           <div className="foot">
             <span>© 2026 JOHN YATES</span>
-            <span>
-              <span className="led">●</span> SIGNAL OK &nbsp;·&nbsp; BUILT WITH REACT
-            </span>
           </div>
         </footer>
       </div>
