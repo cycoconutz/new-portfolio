@@ -213,12 +213,12 @@ const styles = `
 const projects = [
   {
     num: "01",
-    title: "LinkedList",
-    tag: "latest",
-    desc: "A shared-checklist PWA with no accounts, built around its invite links: make a list, send the link, and everyone edits together with drag-and-drop ordering, priorities, assignment, and Web Push notifications. A Next.js 16 App Router app over Drizzle and Neon serverless Postgres.",
-    tech: ["Next.js 16", "React 19", "TypeScript", "Drizzle ORM", "Neon", "Web Push", "Tailwind CSS"],
-    live: "https://checklist-cyco.vercel.app/",
-    repo: "https://github.com/cycoconutz/checklist",
+    title: "Lulla",
+    tag: "featured",
+    desc: "A calm, local-first baby & parent tracker: one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
+    tech: ["TypeScript", "React", "Vite", "PWA", "Neon"],
+    live: "https://lulla.dev/landing/",
+    repo: "https://github.com/cycoconutz/lulla",
   },
   {
     num: "02",
@@ -231,15 +231,6 @@ const projects = [
   },
   {
     num: "03",
-    title: "Lulla",
-    tag: "featured",
-    desc: "A calm, local-first baby & parent tracker: one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
-    tech: ["TypeScript", "React", "Vite", "PWA", "Neon"],
-    live: "https://lulla.dev/landing/",
-    repo: "https://github.com/cycoconutz/lulla",
-  },
-  {
-    num: "04",
     title: "IronLog",
     tag: "project",
     desc: "A full-stack strength-training log: record sessions set by set, then see weekly volume, muscle-group splits, streaks, and estimated-1RM personal records. A Spring Boot API and a React SPA ship as a single Docker image over PostgreSQL.",
@@ -248,13 +239,22 @@ const projects = [
     repo: "https://github.com/cycoconutz/ironlog",
   },
   {
-    num: "05",
+    num: "04",
     title: "TwilightVotes",
     tag: "project",
     desc: "A voting tracker for Twilight Imperium agenda phases where players can create sessions, add factions, and tally votes across agendas in real time. Live at twilightvotes.com.",
     tech: ["React", "TypeScript", "Tailwind CSS", "TanStack Query"],
     live: "https://www.twilightvotes.com/",
     repo: "https://github.com/cycoconutz/Twilight-Votes",
+  },
+  {
+    num: "05",
+    title: "LinkedList",
+    tag: "latest",
+    desc: "A shared-checklist PWA with no accounts, built around its invite links: make a list, send the link, and everyone edits together with drag-and-drop ordering, priorities, assignment, and Web Push notifications. A Next.js 16 App Router app over Drizzle and Neon serverless Postgres.",
+    tech: ["Next.js 16", "React 19", "TypeScript", "Drizzle ORM", "Neon", "Web Push", "Tailwind CSS"],
+    live: "https://checklist-cyco.vercel.app/",
+    repo: "https://github.com/cycoconutz/checklist",
   },
 ];
 
@@ -293,7 +293,7 @@ const experience = [
     ],
   },
   {
-    date: "2021 - 2022",
+    date: "Jun 2022 - Sep 2022",
     role: "Teaching Assistant",
     company: "2U",
     desc: "Guided students through full-stack development fundamentals: JavaScript, React, Node.js, MySQL, and more. Resolved technical issues, reported deprecated curriculum, and helped students build autonomy in front-end development.",
