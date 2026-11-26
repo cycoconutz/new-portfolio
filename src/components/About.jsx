@@ -1,10 +1,66 @@
-import { Fragment } from "react";
+import { Fragment, useRef } from "react";
+import { gsap, ScrollTrigger, useGSAP, MOTION } from "../motion/gsap";
 import SkillModule from "./SkillModule";
 import { skillGroups, alsoSkills } from "../data";
 
 export default function About({ selected, onToggle, onClear, status, onGoToProject, linkedinUrl, resumeHref, onOpenResume }) {
+  const sectionRef = useRef(null);
+
+  // Skill modules stagger in as they enter; each jack "seats" once (press plus LED blink).
+  // Only GSAP inline transform/opacity, cleared at the end, so React classes stay untouched.
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION, () => {
+        const mods = gsap.utils.toArray(".mod", sectionRef.current);
+        gsap.set(mods, { y: 16, opacity: 0 });
+        ScrollTrigger.batch(mods, {
+          start: "top 92%",
+          end: "max",
+          once: true,
+          onEnter: (batch) => {
+            gsap.to(batch, {
+              y: 0,
+              opacity: 1,
+              duration: 0.6,
+              ease: "power2.out",
+              stagger: 0.06,
+              clearProps: "transform,opacity",
+            });
+            batch.forEach((mod, i) => {
+              const jacks = mod.querySelectorAll(".jack");
+              const seats = mod.querySelectorAll(".seat");
+              const t0 = i * 0.06 + 0.25;
+              gsap.to(jacks, {
+                keyframes: [
+                  { y: 2, duration: 0.1, ease: "power2.in" },
+                  { y: 0, duration: 0.25, ease: "power2.out" },
+                ],
+                stagger: 0.04,
+                delay: t0,
+                onComplete: () => gsap.set(jacks, { clearProps: "transform" }),
+              });
+              gsap.to(seats, {
+                keyframes: [
+                  { opacity: 1, duration: 0.1, ease: "power2.out" },
+                  { opacity: 0, duration: 0.5, ease: "power2.inOut" },
+                ],
+                stagger: 0.04,
+                delay: t0,
+                onComplete: () => gsap.set(seats, { clearProps: "opacity" }),
+              });
+            });
+          },
+        });
+        return () => gsap.set(mods, { clearProps: "transform,opacity" });
+      });
+      return () => mm.revert();
+    },
+    { scope: sectionRef }
+  );
+
   return (
-    <section id="about">
+    <section id="about" ref={sectionRef}>
       <h2 className="sec-title reveal">who_i_am</h2>
       <div className="about-grid">
         <div className="about-text reveal">

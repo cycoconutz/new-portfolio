@@ -14,7 +14,7 @@ export default function SkillModule({ group, selected, onToggle }) {
               aria-pressed={on}
               onClick={() => onToggle(item.id)}
             >
-              <span className="hole" />
+              <span className="hole"><i className="seat" aria-hidden="true" /></span>
               <span className="lab">{item.name}</span>
             </button>
           );

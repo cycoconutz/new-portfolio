@@ -1,7 +1,36 @@
+import { useRef } from "react";
+import { gsap, ScrollTrigger, useGSAP, MOTION } from "../motion/gsap";
+
 export default function Contact({ email, copied, onCopy, resumeHref, onOpenResume, linkedinUrl }) {
+  const headRef = useRef(null);
+
+  // Cable-draw underline, once, after the title starts typing in.
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION, () => {
+        const line = headRef.current.querySelector(".cable-draw");
+        gsap.set(line, { scaleX: 0 });
+        ScrollTrigger.create({
+          trigger: headRef.current,
+          start: "top 88%",
+          end: "max",
+          once: true,
+          onEnter: () => gsap.to(line, { scaleX: 1, duration: 0.8, delay: 0.3, ease: "power3.out" }),
+        });
+        return () => gsap.set(line, { clearProps: "transform" });
+      });
+      return () => mm.revert();
+    },
+    { scope: headRef }
+  );
+
   return (
     <section id="contact" className="contact">
-      <h2 className="contact-title reveal">Let's connect.</h2>
+      <div className="contact-head" ref={headRef}>
+        <h2 className="contact-title reveal">Let's connect.</h2>
+        <span className="cable-draw" aria-hidden="true" />
+      </div>
       <p className="contact-sub reveal">
         Open to new opportunities, collaborations, and interesting projects.
         Drop me a line: I always respond.
