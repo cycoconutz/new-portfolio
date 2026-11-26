@@ -5,7 +5,7 @@ import { gsap, ScrollTrigger, useGSAP, MOTION } from "../motion/gsap";
 const N = ribbonSkills.length;
 // Three copies so the band stays longer than the viewport plus one loop on wide screens.
 const LIST = [...ribbonSkills, ...ribbonSkills, ...ribbonSkills];
-const LOOP_SECONDS = 34; // time for one loop (one copy of the list)
+const LOOP_SECONDS = N * 3.4; // time for one loop (one copy of the list); keeps the pace as the list grows
 const DRAG_THRESHOLD = 6; // px of horizontal travel before a press becomes a drag
 const SAMPLE_WINDOW = 80; // ms of pointer history used for release velocity
 const MAX_THROW = 4; // px/ms

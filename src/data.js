@@ -157,7 +157,13 @@ export const experience = [
   },
 ];
 
-export const ribbonSkills = ["TypeScript", "React", "Node.js", "GraphQL", "PostgreSQL", "Fastify", "Stripe", "Docker", "Vitest", "Tailwind CSS"];
+// The scrolling strip: a few headline skills, then everything in the "also" list.
+export const ribbonSkills = [
+  ...new Set([
+    "TypeScript", "React", "Node.js", "GraphQL", "PostgreSQL", "Fastify", "Stripe", "Docker", "Vitest", "Tailwind CSS",
+    ...alsoSkills.map((s) => s.name),
+  ]),
+];
 
 // ---- Skill lookups ----
 export const allSkills = [...skillGroups.flatMap((g) => g.items), ...alsoSkills];
