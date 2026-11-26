@@ -114,12 +114,11 @@ nav { position: relative; display: flex; justify-content: space-between; align-i
 .mon-screen { position: relative; height: 16.5rem; background: var(--pane); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
 .mon-screen canvas { display: block; width: 100%; height: 100%; touch-action: pan-y pinch-zoom; cursor: crosshair; }
 .mon-row { position: absolute; left: 0.75rem; right: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding-top: 0.5rem; pointer-events: none; }
-.mon-app { pointer-events: auto; font: inherit; font-size: 0.74rem; font-weight: 600; color: var(--alu); background: none; border: 0; padding: 0; cursor: pointer; border-radius: 3px; }
+.mon-app { pointer-events: auto; font: inherit; font-size: 0.74rem; font-weight: 600; color: var(--alu); text-decoration: none; border-radius: 3px; }
 .mon-app:hover { color: var(--led); }
 .mon-val { font-size: 0.68rem; color: var(--mut); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .mon-val.ok { color: var(--led); }
 .mon-val.down { color: var(--cableText); }
-.mon-foot { padding: 0.7rem 0.4rem 0; font-size: 0.62rem; color: var(--faint); }
 
 /* Signal ribbon */
 .ribbon { position: relative; background: var(--pane); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }

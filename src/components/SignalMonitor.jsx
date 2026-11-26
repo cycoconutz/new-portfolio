@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MOTION } from "../motion/gsap";
+import { projects } from "../data";
 
 // The probes also replace the old warm-up pings: Render's free tier sleeps after
 // 15 idle minutes, so the first probe on load starts waking the demos.
@@ -8,6 +9,8 @@ const TARGETS = [
   { id: "ironlog", name: "IronLog", url: "https://ironlog-llgm.onrender.com/actuator/health" },
   { id: "lulla", name: "Lulla", url: "https://lulla.dev/" },
 ];
+
+const liveUrl = (id) => projects.find((p) => p.id === id).live;
 
 const EVERY_MS = 15000;
 const TIMEOUT_MS = 60000;
@@ -274,12 +277,6 @@ export default function SignalMonitor() {
     };
   }, []);
 
-  const goTo = (id) => {
-    const el = document.getElementById(`project-${id}`);
-    if (!el) return;
-    el.scrollIntoView({ behavior: window.matchMedia(MOTION).matches ? "smooth" : "auto", block: "start" });
-  };
-
   const summary = TARGETS.map((t) => `${t.name} ${describe(status[t.id]).replace(" ·", ",")}`).join(". ");
 
   return (
@@ -303,16 +300,15 @@ export default function SignalMonitor() {
         />
         {TARGETS.map((t, i) => (
           <div className="mon-row" key={t.id} style={{ top: `${(i / TARGETS.length) * 100}%` }}>
-            <button type="button" className="mon-app" onClick={() => goTo(t.id)} title={`Go to the ${t.name} project`}>
+            <a className="mon-app" href={liveUrl(t.id)} target="_blank" rel="noopener noreferrer" title={`Open ${t.name} (new tab)`}>
               {t.name}
-            </button>
+            </a>
             <span className={`mon-val ${status[t.id].phase}`}>
               {readout && readout.id === t.id ? readout.text : describe(status[t.id])}
             </span>
           </div>
         ))}
       </div>
-      <p className="mon-foot">round-trip from your browser, every 15 s</p>
     </div>
   );
 }
