@@ -6,7 +6,8 @@ import { projects } from "../data";
 // 15 idle minutes, so the first probe on load starts waking the demos.
 const TARGETS = [
   { id: "deadwax", name: "Deadwax", url: "https://deadwax-exee.onrender.com/api/health" },
-  { id: "ironlog", name: "IronLog", url: "https://ironlog-llgm.onrender.com/actuator/health" },
+  // readStatus: this endpoint allows cross-origin reads, so require a 2xx.
+  { id: "ironlog", name: "IronLog", url: "https://ironlog-llgm.onrender.com/actuator/health", readStatus: true },
   { id: "lulla", name: "Lulla", url: "https://lulla.dev/" },
 ];
 
@@ -175,9 +176,10 @@ export default function SignalMonitor() {
         if (done) stoppedAt = at;
         if (!raf) draw();
       };
-      // no-cors: the response is opaque, so this only proves the app answered.
-      fetch(target.url, { mode: "no-cors", cache: "no-store", signal: ctrl.signal }).then(
-        () => finish(true),
+      // no-cors responses are opaque, so for those this only proves something answered.
+      const mode = target.readStatus ? "cors" : "no-cors";
+      fetch(target.url, { mode, cache: "no-store", signal: ctrl.signal }).then(
+        (res) => finish(!target.readStatus || res.ok),
         () => finish(false)
       );
     };
