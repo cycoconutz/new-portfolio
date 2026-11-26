@@ -102,10 +102,24 @@ nav { position: relative; display: flex; justify-content: space-between; align-i
 .screw.tr { top: 0.55rem; right: 0.55rem; }
 .screw.bl { bottom: 0.55rem; left: 0.55rem; }
 .screw.br { bottom: 0.55rem; right: 0.55rem; }
-.panel svg { display: block; width: 100%; height: auto; }
-.cablepath { fill: none; stroke: var(--cable); stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 6px rgba(224,69,47,0.5)); }
-.sig { fill: none; stroke: #ffd9a0; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 16 240; animation: travel 3.4s linear infinite; }
-@keyframes travel { to { stroke-dashoffset: -256; } }
+
+/* Signal monitor */
+.monitor { font-family: var(--mono); }
+.mon-head { display: flex; justify-content: space-between; align-items: center; padding: 0 0.4rem 0.7rem; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.mon-live { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--led); }
+.mon-live.off { color: var(--faint); }
+.mon-led { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; animation: beat 0.9s ease-out; }
+.mon-live.off .mon-led { box-shadow: none; animation: none; }
+@keyframes beat { from { transform: scale(1.9); } to { transform: scale(1); } }
+.mon-screen { position: relative; height: 16.5rem; background: var(--pane); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.mon-screen canvas { display: block; width: 100%; height: 100%; touch-action: pan-y pinch-zoom; cursor: crosshair; }
+.mon-row { position: absolute; left: 0.75rem; right: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding-top: 0.5rem; pointer-events: none; }
+.mon-app { pointer-events: auto; font: inherit; font-size: 0.74rem; font-weight: 600; color: var(--alu); background: none; border: 0; padding: 0; cursor: pointer; border-radius: 3px; }
+.mon-app:hover { color: var(--led); }
+.mon-val { font-size: 0.68rem; color: var(--mut); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.mon-val.ok { color: var(--led); }
+.mon-val.down { color: var(--cableText); }
+.mon-foot { padding: 0.7rem 0.4rem 0; font-size: 0.62rem; color: var(--faint); }
 
 /* Signal ribbon */
 .ribbon { position: relative; background: var(--pane); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
@@ -127,6 +141,9 @@ body.ribbon-dragging, body.ribbon-dragging * { cursor: grabbing !important; user
 section { padding: 5rem 0; border-top: 1px solid var(--line); }
 #top { border-top: 0; }
 .sec-title { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -0.01em; margin-bottom: 2.6rem; }
+
+/* Nav jumps: use most of the section's top padding so the title lands near the header */
+#about, #experience, #projects, #contact { scroll-margin-top: -3rem; }
 
 /* About */
 .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; column-gap: 3.5rem; row-gap: 0; align-items: start; }
@@ -279,7 +296,7 @@ footer { border-top: 1px solid var(--line); }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  .ribbon .scan, .sig, .brand .led { animation: none; }
+  .ribbon .scan, .brand .led, .mon-led { animation: none; }
   html { scroll-behavior: auto; }
   .cable-head { display: none; }
   .nav-ind, .route::before, .route > *, .route .tech li, .route .tech li::before { transition: none; }

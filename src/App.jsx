@@ -18,14 +18,6 @@ const RESUME_VERSION = "1.4.6";
 const RESUME_HREF = `${import.meta.env.BASE_URL}resume.pdf?v=${RESUME_VERSION}`;
 const EMAIL = "johndyates@gmail.com";
 const LINKEDIN_URL = "https://www.linkedin.com/in/john-d-yates/";
-// Render's free tier sleeps after 15 idle minutes and takes about a minute to
-// wake. Pinging the health routes when the portfolio loads starts that wake-up
-// while the visitor is still reading, so the demo is usually ready by the click.
-const WARM_URLS = [
-  "https://deadwax-exee.onrender.com/api/health",
-  "https://ironlog-llgm.onrender.com/actuator/health",
-];
-
 function useCopyEmail() {
   const [copied, setCopied] = useState(false);
   const copy = useCallback(() => {
@@ -57,11 +49,6 @@ export default function Portfolio() {
   useReveal(rootRef);
   useTypedTitles(rootRef);
   useFontRefresh();
-  useEffect(() => {
-    WARM_URLS.forEach((url) => {
-      fetch(url, { mode: "no-cors", cache: "no-store" }).catch(() => {});
-    });
-  }, []);
   const [resumeOpen, setResumeOpen] = useState(false);
   const closeResume = useCallback(() => setResumeOpen(false), []);
   const [copied, copyEmail] = useCopyEmail();

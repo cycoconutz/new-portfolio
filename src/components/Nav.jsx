@@ -23,7 +23,10 @@ export default function Nav() {
       if (!el) return;
       const vars = { trigger: el, start: "top 40%", end: "bottom 40%" };
       if (id === "skills") {
-        // The skills area is #skills (top row) through the end of .skills-below.
+        // The skills area is #skills (top row) through the end of .skills-below. On desktop
+        // it shares its top row with the about text, so it only takes over from "about"
+        // once it has scrolled up to the header.
+        vars.start = () => `top ${headerRef.current.offsetHeight + 48}px`;
         vars.endTrigger = document.querySelector(".skills-below") || el;
       }
       ScrollTrigger.create({

@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP, MOTION, DESKTOP } from "../motion/gsap";
+import SignalMonitor from "./SignalMonitor";
 
 const WORDS = ["connected.", "tested.", "shipped.", "connected."];
 const GLYPHS = "!<>-_/[]{}=+*^?#";
@@ -110,13 +111,7 @@ export default function Hero({ email, resumeHref, onOpenResume }) {
         <span className="screw tr" />
         <span className="screw bl" />
         <span className="screw br" />
-        <svg viewBox="0 0 320 220" role="img" aria-label="signal path from frontend to database">
-          <path className="cablepath" d="M14,40 C90,40 80,180 160,180 S250,40 306,40" />
-          <path className="sig" d="M14,40 C90,40 80,180 160,180 S250,40 306,40" />
-          <circle cx="14" cy="40" r="6" fill="#2b2f35" stroke="#e0452f" strokeWidth="3" />
-          <circle cx="306" cy="40" r="6" fill="#2b2f35" stroke="#e0452f" strokeWidth="3" />
-          <circle cx="160" cy="180" r="6" fill="#2b2f35" stroke="#f0a020" strokeWidth="3" />
-        </svg>
+        <SignalMonitor />
       </div>
     </section>
   );
