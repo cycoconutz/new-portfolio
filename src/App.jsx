@@ -14,7 +14,7 @@ import ResumeModal from "./components/ResumeModal";
 // RESUME_VERSION is bumped by hand whenever public/resume.pdf is replaced.
 // The ?v= query busts the CDN/browser cache so recruiters always
 // get the current file even though the path stays stable.
-const RESUME_VERSION = "1.4.6";
+const RESUME_VERSION = "1.4.7";
 const RESUME_HREF = `${import.meta.env.BASE_URL}resume.pdf?v=${RESUME_VERSION}`;
 const EMAIL = "johndyates@gmail.com";
 const LINKEDIN_URL = "https://www.linkedin.com/in/john-d-yates/";

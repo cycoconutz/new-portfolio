@@ -1,7 +1,19 @@
 export const projects = [
   {
-    id: "deadwax",
+    id: "lulla",
     num: "01",
+    title: "Lulla",
+    tag: "featured",
+    desc: "A calm, local-first family tracker: one-tap feeding, sleep, diaper and routine logs with a live timer, milestones, and optional account-based family sync across devices. Free, no ads.",
+    tech: ["TypeScript", "React", "Vite", "PWA", "Neon"],
+    // Verified: package.json (react-router-dom, tailwindcss, zustand, recharts, vitest, @testing-library/react, dexie).
+    skills: ["typescript", "react", "react-router", "vite", "tailwind", "zustand", "recharts", "pwa", "indexeddb", "postgresql", "sql", "vitest", "rtl", "html-css"],
+    live: "https://lulla.dev/landing/",
+    repo: "https://github.com/cycoconutz/lulla",
+  },
+  {
+    id: "deadwax",
+    num: "02",
     title: "Deadwax",
     tag: "featured",
     desc: "A full-stack vinyl marketplace with a checkout that cannot oversell: race-safe stock claims, Stripe payments with idempotency keys, replay-safe signed webhooks, and a transactional outbox. Plus full-text catalog search, seller fulfillment dashboards, and an admin back office.",
@@ -16,18 +28,6 @@ export const projects = [
     skills: ["typescript", "react", "react-router", "tanstack-query", "vite", "nodejs", "fastify", "zod", "postgresql", "sql", "drizzle-orm", "stripe", "opentelemetry", "vitest", "html-css"],
     live: "https://deadwax-exee.onrender.com/",
     repo: "https://github.com/cycoconutz/deadwax",
-  },
-  {
-    id: "lulla",
-    num: "02",
-    title: "Lulla",
-    tag: "featured",
-    desc: "A calm, local-first baby & parent tracker: one-tap feeding, sleep, diaper, growth and routine logs with a live timer, WHO growth charts, and optional family sync across devices. Free, no accounts, no ads.",
-    tech: ["TypeScript", "React", "Vite", "PWA", "Neon"],
-    // Verified: package.json (react-router-dom, tailwindcss, zustand, recharts, vitest, @testing-library/react, dexie).
-    skills: ["typescript", "react", "react-router", "vite", "tailwind", "zustand", "recharts", "pwa", "indexeddb", "postgresql", "sql", "vitest", "rtl", "html-css"],
-    live: "https://lulla.dev/landing/",
-    repo: "https://github.com/cycoconutz/lulla",
   },
   {
     id: "ironlog",
